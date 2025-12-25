@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Integration Test - Bourbon3</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <style>
+        body { background: #f8f9fa; padding: 20px; }
+        .test-section { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .test-pass { color: #28a745; font-weight: bold; }
+        .test-fail { color: #dc3545; font-weight: bold; }
+        .test-info { background: #f0f7ff; border-left: 4px solid #007bff; padding: 15px; margin: 10px 0; }
+        .data-table { font-size: 0.9rem; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">🧪 Bourbon3 Data Integration Test Report</h1>
+        
+        <div class="test-section">
+            <h2>Test Summary</h2>
+            <p id="summary" class="lead">Loading tests...</p>
+            <div id="test-results"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Packages Data</h2>
+            <div id="packages-test"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>👥 Staff Data</h2>
+            <div id="staff-test"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>👨‍💼 Teams Data</h2>
+            <div id="teams-test"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 Assignments Data</h2>
+            <div id="assignments-test"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Orders Data</h2>
+            <div id="orders-test"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>✅ Task Data</h2>
+            <div id="tasks-test"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔗 Data Relationships</h2>
+            <div id="relationships-test"></div>
+        </div>
+    </div>
+
+    <script src="js/utils/csv-parser.js"></script>
+    <script>
+        async function runTests() {
+            const results = {
+                packages: false,
+                staff: false,
+                teams: false,
+                assignments: false,
+                orders: false,
+                tasks: false
+            };
+
+            try {
+                // Load and test CSV data
+                const db = await CSVParser.buildDatabase();
+
+                // Test Packages
+                if (db.packages && db.packages.length > 0) {
+                    results.packages = true;
+                    displayPackages(db.packages);
+                } else {
+                    displayError('packages-test', 'Failed to load packages');
+                }
+
+                // Test Staff
+                if (db.staff && db.staff.length > 0) {
+                    results.staff = true;
+                    displayStaff(db.staff);
+                } else {
+                    displayError('staff-test', 'Failed to load staff');
+                }
+
+                // Test Teams
+                if (db.teams && db.teams.length > 0) {
+                    results.teams = true;
+                    displayTeams(db.teams, db.staff);
+                } else {
+                    displayError('teams-test', 'Failed to load teams');
+                }
+
+                // Test Assignments
+                if (db.packages && db.packages.some(p => p.services && p.services.length > 0)) {
+                    results.assignments = true;
+                    displayAssignments(db);
+                } else {
+                    displayError('assignments-test', 'Failed to load assignments');
+                }
+
+                // Test Orders
+                if (db.orders && db.orders.length > 0) {
+                    results.orders = true;
+                    displayOrders(db.orders);
+                } else {
+                    displayError('orders-test', 'Failed to load orders');
+                }
+
+                // Test Tasks
+                if (db.tasks && db.tasks.length > 0) {
+                    results.tasks = true;
+                    displayTasks(db.tasks);
+                } else {
+                    displayError('tasks-test', 'Failed to load tasks');
+                }
+
+                // Display relationships
+                displayRelationships(db);
+
+                // Summary
+                const passed = Object.values(results).filter(v => v).length;
+                const total = Object.keys(results).length;
+                document.getElementById('summary').innerHTML = `
+                    Tests Passed: <span class="test-pass">${passed}/${total}</span>
+                    ${passed === total ? '✅ All systems go!' : '⚠️ Some issues detected'}
+                `;
+
+            } catch (error) {
+                console.error('Test error:', error);
+                document.getElementById('summary').innerHTML = `<span class="test-fail">❌ Error: ${error.message}</span>`;
+            }
+        }
+
+        function displayPackages(packages) {
+            let html = `<p class="test-pass">✅ Loaded ${packages.length} packages</p>`;
+            html += '<table class="table table-sm data-table">';
+            html += '<thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Duration</th><th>Services</th></tr></thead><tbody>';
+            packages.forEach(pkg => {
+                const serviceCount = (pkg.services || []).length;
+                html += `<tr>
+                    <td><code>${pkg.id}</code></td>
+                    <td>${pkg.name}</td>
+                    <td>฿${(pkg.price || 0).toLocaleString()}</td>
+                    <td>${pkg.duration} days</td>
+                    <td><span class="badge bg-info">${serviceCount} services</span></td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            
+            // Show services for first package
+            if (packages.length > 0 && packages[0].services) {
+                html += '<h5 class="mt-3">Services in pkg-1:</h5>';
+                html += '<table class="table table-sm data-table">';
+                html += '<thead><tr><th>Title</th><th>Dept</th><th>Interval</th><th>Description</th></tr></thead><tbody>';
+                packages[0].services.forEach(svc => {
+                    html += `<tr>
+                        <td>${svc.title}</td>
+                        <td><span class="badge bg-secondary">${svc.dept}</span></td>
+                        <td>${svc.interval}</td>
+                        <td><small>${svc.description}</small></td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+            }
+            document.getElementById('packages-test').innerHTML = html;
+        }
+
+        function displayStaff(staff) {
+            let html = `<p class="test-pass">✅ Loaded ${staff.length} staff members</p>`;
+            html += '<table class="table table-sm data-table">';
+            html += '<thead><tr><th>ID</th><th>Name</th><th>Role</th><th>Department</th><th>Status</th></tr></thead><tbody>';
+            staff.forEach(s => {
+                html += `<tr>
+                    <td><code>${s.id}</code></td>
+                    <td>${s.name}</td>
+                    <td>${s.role}</td>
+                    <td><span class="badge bg-secondary">${s.dept}</span></td>
+                    <td><span class="badge bg-success">${s.status}</span></td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('staff-test').innerHTML = html;
+        }
+
+        function displayTeams(teams, staff) {
+            let html = `<p class="test-pass">✅ Loaded ${teams.length} teams</p>`;
+            html += '<table class="table table-sm data-table">';
+            html += '<thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Members</th><th>Assignments</th></tr></thead><tbody>';
+            teams.forEach(team => {
+                const memberNames = (team.members || []).map(mid => {
+                    const s = staff.find(st => st.id === mid);
+                    return s ? s.name : mid;
+                }).join(', ');
+                html += `<tr>
+                    <td><code>${team.id}</code></td>
+                    <td>${team.name}</td>
+                    <td><span class="badge bg-secondary">${team.dept}</span></td>
+                    <td>${memberNames}</td>
+                    <td><span class="badge bg-info">${(team.assignmentTypes || []).length} types</span></td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            
+            if (teams.length > 0 && teams[0].assignmentTypes) {
+                html += '<h5 class="mt-3">Assignments in tm-1:</h5>';
+                html += '<table class="table table-sm data-table">';
+                html += '<thead><tr><th>ID</th><th>Name</th><th>Price</th><th>Description</th></tr></thead><tbody>';
+                teams[0].assignmentTypes.forEach(at => {
+                    html += `<tr>
+                        <td><code>${at.id}</code></td>
+                        <td>${at.name}</td>
+                        <td>฿${(at.price || 0).toLocaleString()}</td>
+                        <td><small>${at.description}</small></td>
+                    </tr>`;
+                });
+                html += '</tbody></table>';
+            }
+            document.getElementById('teams-test').innerHTML = html;
+        }
+
+        function displayAssignments(db) {
+            let html = `<p class="test-pass">✅ Assignments linked to services</p>`;
+            
+            // Show how assignments are used in services
+            let assignmentCount = 0;
+            db.packages.forEach(pkg => {
+                if (pkg.services) assignmentCount += pkg.services.length;
+            });
+            
+            html += `<div class="test-info">
+                <strong>Total Services (Assignments):</strong> ${assignmentCount}
+                <br>
+                <strong>Data Format:</strong> Parsed from packages.csv with structure: title:dept:interval:description:price
+            </div>`;
+            
+            html += '<h5>Example Service Structure:</h5>';
+            html += '<pre>' + JSON.stringify({
+                title: "Room Cleaning",
+                dept: "Housekeeping",
+                interval: "Every 3 days",
+                description: "Clean room and make bed.",
+                price: 0
+            }, null, 2) + '</pre>';
+            
+            document.getElementById('assignments-test').innerHTML = html;
+        }
+
+        function displayOrders(orders) {
+            let html = `<p class="test-pass">✅ Loaded ${orders.length} orders</p>`;
+            html += '<table class="table table-sm data-table">';
+            html += '<thead><tr><th>ID</th><th>Customer</th><th>Package</th><th>Room</th><th>Check-in</th><th>Status</th></tr></thead><tbody>';
+            orders.forEach(ord => {
+                html += `<tr>
+                    <td><code>${ord.id}</code></td>
+                    <td>${ord.customer}</td>
+                    <td><code>${ord.package_id}</code></td>
+                    <td>${ord.room}</td>
+                    <td>${ord.check_in}</td>
+                    <td><span class="badge bg-success">${ord.status}</span></td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('orders-test').innerHTML = html;
+        }
+
+        function displayTasks(tasks) {
+            let html = `<p class="test-pass">✅ Loaded ${tasks.length} tasks</p>`;
+            html += '<table class="table table-sm data-table">';
+            html += '<thead><tr><th>ID</th><th>Order</th><th>Department</th><th>Title</th><th>Date</th><th>Status</th></tr></thead><tbody>';
+            tasks.forEach(task => {
+                html += `<tr>
+                    <td><code>${task.id}</code></td>
+                    <td><code>${task.order_id}</code></td>
+                    <td><span class="badge bg-secondary">${task.dept}</span></td>
+                    <td>${task.title}</td>
+                    <td>${task.date}</td>
+                    <td><span class="badge bg-warning">${task.status}</span></td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('tasks-test').innerHTML = html;
+        }
+
+        function displayRelationships(db) {
+            let html = '<h5>Data Relationships Verified:</h5>';
+            html += '<div class="test-info">';
+            
+            // Package → Services
+            const pkgWithServices = db.packages.filter(p => p.services && p.services.length > 0).length;
+            html += `<strong>✅ Packages with Services:</strong> ${pkgWithServices}/${db.packages.length}<br>`;
+            
+            // Teams → Members
+            const teamsWithMembers = db.teams.filter(t => t.members && t.members.length > 0).length;
+            html += `<strong>✅ Teams with Members:</strong> ${teamsWithMembers}/${db.teams.length}<br>`;
+            
+            // Teams → Assignments
+            const teamsWithAssignments = db.teams.filter(t => t.assignmentTypes && t.assignmentTypes.length > 0).length;
+            html += `<strong>✅ Teams with Assignments:</strong> ${teamsWithAssignments}/${db.teams.length}<br>`;
+            
+            // Orders → Packages
+            const validOrders = db.orders.filter(o => db.packages.some(p => p.id === o.package_id)).length;
+            html += `<strong>✅ Orders with Valid Packages:</strong> ${validOrders}/${db.orders.length}<br>`;
+            
+            // Tasks → Orders
+            const validTasks = db.tasks.filter(t => db.orders.some(o => o.id === t.order_id)).length;
+            html += `<strong>✅ Tasks with Valid Orders:</strong> ${validTasks}/${db.tasks.length}<br>`;
+            
+            html += '</div>';
+            
+            // Show sample relationship
+            if (db.packages.length > 0 && db.orders.length > 0) {
+                html += '<h5 class="mt-3">Sample Relationship: Order → Package → Services</h5>';
+                const ord = db.orders[0];
+                const pkg = db.packages.find(p => p.id === ord.package_id);
+                if (pkg) {
+                    html += `<div class="test-info">
+                        <strong>Order:</strong> ${ord.id} (${ord.customer})<br>
+                        <strong>→ Package:</strong> ${pkg.id} (${pkg.name})<br>
+                        <strong>→ Services:</strong> ${(pkg.services || []).map(s => s.title).join(', ')}<br>
+                    </div>`;
+                }
+            }
+            
+            document.getElementById('relationships-test').innerHTML = html;
+        }
+
+        function displayError(elementId, message) {
+            document.getElementById(elementId).innerHTML = `<p class="test-fail">❌ ${message}</p>`;
+        }
+
+        // Run tests on page load
+        document.addEventListener('DOMContentLoaded', runTests);
+    </script>
+</body>
+</html>

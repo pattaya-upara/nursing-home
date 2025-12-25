@@ -1,0 +1,75 @@
+/* App Sidebar Component Styles */
+:host {
+    display: block;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+}
+
+.sidebar-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+}
+
+.header {
+    padding: 2em 1.5em; /* 32px 24px */
+    flex-shrink: 0;
+}
+
+.brand {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.25em;
+    padding: 0;
+}
+
+.brand span {
+    color: hsl(0, 0%, 20%);
+}
+
+.subtitle {
+    color: var(--secondary);
+    font-size: 0.75em;
+    padding-top: 0.25em; /* 4px */
+}
+
+.nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em; /* 4px */
+    padding: 0 1em; /* 16px */
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+::slotted(.nav-link) {
+    display: flex;
+    align-items: center;
+    padding: 0.75em 1em; /* 12px 16px */
+    color: var(--secondary) !important;
+    text-decoration: none !important;
+    font-weight: 500;
+    font-size: 0.9em;
+    border-radius: 0.5em; /* 8px */
+    transition: all 0.2s;
+}
+
+::slotted(.nav-link.active) {
+    background: hsla(211, 100%, 50%, 0.1);
+    color: var(--primary) !important;
+}
+
+.footer {
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+    flex-shrink: 0;
+}

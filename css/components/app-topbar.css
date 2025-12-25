@@ -1,0 +1,45 @@
+/* App Topbar Component Styles */
+:host {
+    display: block;
+    width: 100%;
+}
+
+.topbar {
+    background: var(--white);
+    padding: 1em 1.5em; /* 16px 24px */
+    border-bottom: 0.0625em solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0.125em 0.25em hsla(0, 0%, 0%, 0.02);
+}
+
+.logo {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.25em;
+    text-decoration: none;
+    padding: 0;
+}
+
+.logo span {
+    color: hsl(0, 0%, 20%);
+}
+
+.nav {
+    display: flex;
+    gap: 1.5em; /* 24px */
+}
+
+::slotted(.nav-link) {
+    text-decoration: none;
+    color: var(--secondary);
+    font-size: 0.875em;
+    font-weight: 500;
+    transition: color 0.2s;
+    padding: 0.5em 0.75em;
+}
+
+::slotted(.nav-link:hover) {
+    color: var(--primary);
+}

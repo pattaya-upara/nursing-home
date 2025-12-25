@@ -1,0 +1,86 @@
+/* App Sidesheet Component Styles */
+:host {
+    display: block;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: hsla(0, 0%, 0%, 0.1);
+    backdrop-filter: blur(0px);
+    z-index: 1040;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, backdrop-filter 0.4s ease, visibility 0.4s;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+    backdrop-filter: blur(8px);
+    background: hsla(0, 0%, 0%, 0.3);
+}
+
+.sheet {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 80%;
+    height: 100vh;
+    background: var(--white);
+    box-shadow: -10px 0 30px hsla(0, 0%, 0%, 0.1);
+    z-index: 1050;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+}
+
+:host([open]) .sheet {
+    transform: translateX(0);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5em 2em; /* 24px 32px */
+    border-bottom: 0.0625em solid var(--border);
+}
+
+.title {
+    font-size: 1.5em;
+    font-weight: 700;
+    padding: 0;
+    color: hsl(0, 0%, 20%);
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    padding: 0;
+}
+
+.left-pane {
+    border-right: 0.0625em solid var(--border); /* Added separator as per convention */
+    padding: 2em; /* 32px */
+}
+
+.right-pane {
+    padding: 2em; /* 32px */
+}
+
+footer {
+    padding: 1.5em 2em; /* 24px 32px */
+    border-top: 0.0625em solid var(--border);
+    background: var(--white);
+    /* margin-top: auto is allowed in flex contexts for alignment, 
+       but we ensure the container is flex with no other margins */
+}
