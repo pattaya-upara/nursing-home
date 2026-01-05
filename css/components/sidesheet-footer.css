@@ -1,17 +1,22 @@
 /* Sidesheet Footer Component Styles */
 :host {
-    display: block;
-    width: 100%;
-}
-
-.footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
     padding: 0;
     background: transparent;
     border-top: none;
     gap: 1em; /* 16px */
+    box-sizing: border-box;
+}
+
+/* Standalone decoration mode - when used outside sidesheet */
+:host([standalone]) {
+    padding: 1.5em;
+    background: var(--white);
+    border-radius: 0.5em;
+    border: 1px solid var(--border);
 }
 
 .group {

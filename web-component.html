@@ -21,52 +21,53 @@
     <script src="js/api.js"></script>
 
     <!-- Web Components -->
-    <script src="js/components/app-topbar.js"></script>
-    <script src="js/components/app-sidebar.js"></script>
+    <script src="js/components/app-nav.js"></script>
     <script src="js/components/entity-card.js"></script>
     <script src="js/components/sidesheet-footer.js"></script>
     <script src="js/components/app-sidesheet.js"></script>
 </head>
 
 <body class="main-content-layout">
-    <section>
+    <header>
         <h1>Component Showcase</h1>
         <p>This page demonstrates all available web components using the HSL-based design system and 8pt grid.</p>
-    </section>
+    </header>
 
     <section>
-        <h2 class="tertiary" style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.1em; padding: 1em 0;">Topbar</h2>
-        <app-topbar></app-topbar>
+        <h2 class="tertiary">Navigation (Horizontal / Topbar)</h2>
+        <app-nav orientation="horizontal" show-profile="true">
+            <a slot="menu" class="nav-link active" href="#"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
+            <a slot="menu" class="nav-link" href="#"><i class="fas fa-box me-2"></i> Packages</a>
+            <a slot="menu" class="nav-link" href="#"><i class="fas fa-users me-2"></i> Teams</a>
+        </app-nav>
     </section>
 
-    <section style="display: flex; gap: 2em; padding-top: 2em;">
-        <div style="flex: 0 0 var(--sidebar-width);">
-            <h2 class="tertiary" style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.1em; padding-bottom: 1em;">Sidebar</h2>
-            <app-sidebar style="position: relative; height: 500px; border: 1px solid var(--border);">
-                <div slot="menu">
-                    <a class="nav-link active" href="#"><i class="fas fa-chart-line"></i> Dashboard</a>
-                    <a class="nav-link" href="#"><i class="fas fa-box"></i> Packages</a>
-                    <a class="nav-link" href="#"><i class="fas fa-users"></i> Teams</a>
-                </div>
-            </app-sidebar>
+    <section style="display: flex; flex-direction: row; gap: 2em;">
+        <div style="flex: 0 0 var(--sidebar-width); display: flex; flex-direction: column; gap: 1em;">
+            <h2 class="tertiary">Navigation (Vertical / Sidebar)</h2>
+            <app-nav orientation="vertical" style="position: relative; height: 500px;">
+                <a slot="menu" class="nav-link active" href="#"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
+                <a slot="menu" class="nav-link" href="#"><i class="fas fa-box me-2"></i> Packages</a>
+                <a slot="menu" class="nav-link" href="#"><i class="fas fa-users me-2"></i> Teams</a>
+            </app-nav>
         </div>
 
         <div style="flex: 1; display: flex; flex-direction: column; gap: 2em;">
-            <div>
-                <h2 class="tertiary" style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.1em; padding-bottom: 1em;">Entity Card</h2>
-                <div id="card-container" style="max-width: 400px;"></div>
+            <div id="entity-card-demo-section" style="display: flex; flex-direction: column; gap: 1em;">
+                <h2 class="tertiary">Entity Card</h2>
+                <!-- Card will be appended here directly -->
             </div>
 
-            <div>
-                <h2 class="tertiary" style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.1em; padding-bottom: 1em;">Sidesheet Footer</h2>
-                <div style="background: white; padding: 1.5em; border-radius: 0.5em; border: 1px solid var(--border);">
-                    <sidesheet-footer save-label="Confirm Action"></sidesheet-footer>
+            <div style="display: flex; flex-direction: column; gap: 1.5em;">
+                <h2 class="tertiary">Sidesheet Footer</h2>
+                <sidesheet-footer standalone save-label="Confirm Action"></sidesheet-footer>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1em;">
+                <h2 class="tertiary">Interactive Sidesheet</h2>
+                <div>
+                    <button class="primary" onclick="document.getElementById('demo-sheet').setAttribute('open', '')">Open Sidesheet Component</button>
                 </div>
-            </div>
-
-            <div>
-                <h2 class="tertiary" style="font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.1em; padding-bottom: 1em;">Interactive Sidesheet</h2>
-                <button class="primary" onclick="document.getElementById('demo-sheet').setAttribute('open', '')">Open Sidesheet Component</button>
             </div>
         </div>
     </section>
@@ -96,7 +97,7 @@
                 const card = document.createElement('entity-card');
                 card.setAttribute('type', 'package');
                 card.setAttribute('data', JSON.stringify(pkg));
-                document.getElementById('card-container').appendChild(card);
+                document.getElementById('entity-card-demo-section').appendChild(card);
             }
 
             // Close sheet handler

@@ -37,40 +37,37 @@ class EntityCard extends HTMLElement {
         const isTeam = this.type === 'team';
 
         this.shadowRoot.innerHTML = `
+            <link rel="stylesheet" href="css/style.css">
             <link rel="stylesheet" href="css/components/entity-card.css">
-            <div class="card" part="card">
-                <div class="card-body">
-                    <div class="card-header-row">
-                        <h2 class="card-title">${this._escapeHtml(data.name)}</h2>
-                        ${isPackage
-                ? `<span class="badge badge-primary">${data.duration} Days</span>`
-                : `<span class="badge badge-info">${this._escapeHtml(data.dept)}</span>`
+            <header>
+                <h3>${this._escapeHtml(data.name)}</h3>
+                ${isPackage
+                ? `<span class="badge primary">${data.duration} Days</span>`
+                : `<span class="badge secondary">${this._escapeHtml(data.dept)}</span>`
             }
-                    </div>
-                    
-                    ${isPackage && data.description
-                ? `<p class="description">${this._escapeHtml(data.description)}</p>`
+            </header>
+            
+            ${isPackage && data.description
+                ? `<p>${this._escapeHtml(data.description)}</p>`
                 : ''
             }
-                    
-                    ${isTeam ? this._renderMemberAvatars(data.members || []) : ''}
-                    
-                    <div class="card-footer-row">
-                        ${isPackage
+            
+            ${isTeam ? this._renderMemberAvatars(data.members || []) : ''}
+
+            <div class="summary-row">
+                ${isPackage
                 ? `<span class="price">฿${(data.price || 0).toLocaleString()}</span>
-                               <span class="meta">${(data.services || []).length} Services</span>`
+                        <span class="meta">${(data.services || []).length} Services</span>`
                 : `<span class="meta">${(data.members || []).length} Members</span>
-                               <span class="meta">${(data.assignmentTypes || []).length} Services</span>`
+                        <span class="meta">${(data.assignmentTypes || []).length} Services</span>`
             }
-                    </div>
-                    
-                    ${isTeam ? this._renderAssignmentList(data.assignmentTypes || []) : ''}
-                </div>
             </div>
+            
+            ${isTeam ? `<footer>${this._renderAssignmentList(data.assignmentTypes || [])}</footer>` : ''}
         `;
 
         // Add click handler
-        this.shadowRoot.querySelector('.card').addEventListener('click', () => {
+        this.addEventListener('click', () => {
             this.dispatchEvent(new CustomEvent('card-click', {
                 bubbles: true,
                 composed: true,
@@ -86,34 +83,34 @@ class EntityCard extends HTMLElement {
         const remaining = members.length - 5;
 
         return `
-            <div class="member-avatars">
+            <div class="avatar-group">
                 ${displayMembers.map((m, i) => `
-                    <div class="avatar" style="z-index: ${10 - i}">
+                    <div class="avatar sm" style="z-index: ${10 - i}">
                         ${m.substring(3)}
                     </div>
                 `).join('')}
-                ${remaining > 0 ? `<div class="avatar" style="z-index: 0">+${remaining}</div>` : ''}
+                ${remaining > 0 ? `<div class="avatar sm" style="z-index: 0">+${remaining}</div>` : ''}
             </div>
         `;
     }
 
     _renderAssignmentList(assignments) {
         if (!assignments.length) {
-            return `<div class="assignment-list"><div class="empty-state">No services registered</div></div>`;
+            return `<section class="assignment-list"><div class="empty-state">No services registered</div></section>`;
         }
 
         return `
-            <div class="assignment-list">
+            <section class="assignment-list">
                 ${assignments.map(at => `
-                    <div class="assignment-item">
-                        <div>
-                            <div class="assignment-name">${this._escapeHtml(at.name)}</div>
-                            ${at.description ? `<div class="assignment-desc">${this._escapeHtml(at.description)}</div>` : ''}
+                    <div class="assignment-row">
+                        <div class="assignment-info">
+                            <div class="name">${this._escapeHtml(at.name)}</div>
+                            <div class="desc">${this._escapeHtml(at.description)}</div>
                         </div>
-                        <span class="assignment-price">฿${(at.price || 0).toLocaleString()}</span>
+                        ${this.type === 'package' ? `<span class="price">฿${(at.price || 0).toLocaleString()}</span>` : ''}
                     </div>
                 `).join('')}
-            </div>
+            </section>
         `;
     }
 

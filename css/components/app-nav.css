@@ -1,0 +1,210 @@
+/* Unified App Navigation Component Styles */
+:host {
+    display: flex;
+    background: var(--white);
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+/* Vertical Layout (Sidebar) */
+:host([orientation="vertical"]) {
+    flex-direction: column;
+    width: var(--sidebar-width);
+    height: 100vh;
+    border-right: 0.0625em solid var(--border);
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+/* Horizontal Layout (Topbar) */
+:host([orientation="horizontal"]) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 3.5em;
+    /* 56px */
+    padding: 0 1.5em;
+    border-bottom: 0.0625em solid var(--border);
+    position: relative;
+}
+
+/* --- Header / Branding --- */
+header {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+:host([orientation="vertical"]) header {
+    padding: 2em 1.5em;
+}
+
+:host([orientation="horizontal"]) header {
+    padding: 0;
+}
+
+.brand {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1.25em;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.brand span {
+    color: hsl(0, 0%, 20%);
+}
+
+.subtitle {
+    color: hsl(0, 0%, 40%);
+    /* Muted but using base neutral instead of secondary blue */
+    font-size: 0.75em;
+    padding-top: 0.25em;
+}
+
+/* --- Navigation Menu --- */
+.nav-content {
+    flex: 1;
+    display: flex;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+:host([orientation="vertical"]) .nav-content {
+    flex-direction: column;
+    padding: 0;
+}
+
+:host([orientation="horizontal"]) .nav-content {
+    flex-direction: row;
+    align-items: center;
+    padding: 0 2em;
+    gap: 1em;
+}
+
+::slotted(.nav-link) {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    color: hsl(0, 0%, 20%) !important;
+    /* Using primary text color */
+    text-decoration: none !important;
+    font-weight: 500;
+    font-size: 0.9em;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
+
+/* Vertical Slot Styling */
+:host([orientation="vertical"]) ::slotted(.nav-link) {
+    height: 3.5em;
+    width: calc(100% - 0.5em);
+    /* Increase padding to align icons with the word 'Mall' in header */
+    padding-left: 0.5em;
+    /* Consistent space on the front for all rows */
+
+    border-left: 0.25em solid transparent;
+    border-radius: 0 2em 2em 0;
+}
+
+:host([orientation="vertical"]) ::slotted(.nav-link.active) {
+    background: hsla(211, 100%, 50%, 0.1);
+    color: var(--primary) !important;
+    border-left: 0.25em solid var(--primary);
+}
+
+/* Horizontal Slot Styling */
+:host([orientation="horizontal"]) ::slotted(.nav-link) {
+    height: 100%;
+    padding: 0 1em;
+}
+
+:host([orientation="horizontal"]) ::slotted(.nav-link.active) {
+    color: var(--primary) !important;
+    position: relative;
+}
+
+:host([orientation="horizontal"]) ::slotted(.nav-link.active)::after {
+    content: '';
+    position: absolute;
+    bottom: -0.0625em;
+    left: 0;
+    width: 100%;
+    height: 0.125em;
+    background: var(--primary);
+}
+
+::slotted(.nav-link:hover) {
+    background: hsla(0, 0%, 0%, 0.03);
+}
+
+/* --- Footer / Profile --- */
+footer {
+    flex-shrink: 0;
+    display: none;
+    /* Default hidden */
+}
+
+:host([show-profile="true"]) footer {
+    display: flex;
+}
+
+:host([orientation="vertical"]) footer {
+    padding: 1.5em;
+    border-top: 0.0625em solid var(--border);
+    margin-top: auto;
+}
+
+:host([orientation="horizontal"]) footer {
+    padding: 0;
+    margin-left: auto;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125em;
+}
+
+:host([orientation="horizontal"]) .user-info {
+    display: none;
+    /* Hide text in topbar to keep it compact, or keep if preferred */
+}
+
+/* Responsive Hide for Info in horizontal if needed */
+@media (min-width: 1024px) {
+    :host([orientation="horizontal"]) .user-info {
+        display: flex;
+    }
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 0.875em;
+    color: hsl(0, 0%, 20%);
+}
+
+.user-role {
+    font-size: 0.75em;
+    color: hsl(0, 0%, 40%);
+}
+
+/* Slotted Link Icon Alignment */
+.nav-link i {
+    width: 1.5em;
+    /* Reserves a stable space for the icon */
+    text-align: center;
+    display: inline-block;
+    flex-shrink: 0;
+}

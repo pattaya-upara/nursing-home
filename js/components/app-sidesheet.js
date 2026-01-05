@@ -38,18 +38,20 @@ class AppSidesheet extends HTMLElement {
             <link rel="stylesheet" href="css/components/app-sidesheet.css">
             <div class="overlay ${this.isOpen ? 'active' : ''}" id="overlay"></div>
             <div class="sheet">
-                <div class="header">
+                <header>
                     <h2 class="title">${this.title}</h2>
                     <button class="close-btn" id="close-btn">&times;</button>
-                </div>
-                <div class="content">
-                    <div class="left-pane">
+                </header>
+                <main>
+                    <section class="left-pane">
                         <slot name="left"></slot>
-                    </div>
-                    <div class="right-pane">
-                        <slot name="right"></slot>
-                    </div>
-                </div>
+                    </section>
+                    <section class="right-pane">
+                        <form id="sidesheet-form">
+                            <slot name="right"></slot>
+                        </form>
+                    </section>
+                </main>
                 <footer>
                     <slot name="footer"></slot>
                 </footer>

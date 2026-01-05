@@ -1,0 +1,40 @@
+/* View Header Component Styles */
+:host {
+    display: block;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2em; /* minimum gap */
+    padding: 0;
+}
+
+.left-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+.right-group {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    margin-left: auto; /* Push to far right */
+}
+
+/* Slot Content Polish */
+::slotted(h2) {
+    margin: 0 !important;
+    font-size: 1.5em !important;
+    font-weight: 700 !important;
+    color: hsl(0, 0%, 20%) !important;
+}
+
+::slotted(p), ::slotted(span) {
+    margin: 0 !important;
+    font-size: 0.875em !important;
+    color: hsl(0, 0%, 40%) !important;
+}

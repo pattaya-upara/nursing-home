@@ -2,16 +2,20 @@
     /* Semantic HSL Foundation */
     --brand: hsl(211, 100%, 40%);
     --primary: hsl(211, 100%, 50%);
-    --secondary: hsl(211, 15%, 85%);
-    --tertiary: hsl(0, 0%, 95%);
+    /* Main forward flow (Solid blue) */
+    --secondary: hsl(211, 30%, 80%);
+    /* Alternative flow (Lower saturation side color) */
+    --tertiary: hsl(0, 0%, 90%);
+    /* Optional/neutral flow (neutral, cancel, back color) */
     --success: hsl(142, 70%, 45%);
     --warning: hsl(38, 92%, 50%);
     --danger: hsl(354, 70%, 54%);
-    
+
     --surface: hsl(43, 19%, 93%);
+    /* Cloud Dancer */
     --white: hsl(0, 0%, 100%);
     --border: hsl(0, 0%, 93%);
-    
+
     --sidebar-width: 260px;
 }
 
@@ -20,24 +24,91 @@ body {
     background-color: var(--surface);
     color: hsl(0, 0%, 20%);
     overflow-x: hidden;
-    font-size: 16px; /* Base for em calculations */
+    font-size: 16px;
+    /* Base for em calculations */
 }
 
 /* --- Semantic Utility Classes --- */
-.brand { color: var(--brand) !important; }
-.primary { background-color: var(--primary) !important; color: var(--white) !important; }
-.secondary { background-color: var(--secondary) !important; color: hsl(211, 100%, 20%) !important; }
-.tertiary { background-color: var(--tertiary) !important; color: hsl(0, 0%, 40%) !important; }
-.success { background-color: var(--success) !important; color: var(--white) !important; }
-.warning { background-color: var(--warning) !important; color: var(--white) !important; }
-.danger { background-color: var(--danger) !important; color: var(--white) !important; }
+.brand {
+    color: var(--brand) !important;
+}
+
+.primary {
+    background-color: var(--primary) !important;
+    color: var(--white) !important;
+}
+
+.secondary {
+    background-color: var(--secondary) !important;
+    color: hsl(211, 100%, 20%) !important;
+}
+
+.tertiary {
+    color: hsl(0, 0%, 40%) !important;
+}
+
+.warning {
+    background-color: var(--warning) !important;
+    color: var(--white) !important;
+}
+
+.success {
+    background-color: var(--success) !important;
+    color: var(--white) !important;
+}
+
+.danger {
+    background-color: var(--danger) !important;
+    color: var(--white) !important;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.d-none {
+    display: none !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 0;
+}
+
+h2.tertiary,
+h3.tertiary {
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: transparent !important;
+}
+
+.success {
+    background-color: var(--success) !important;
+    color: var(--white) !important;
+}
+
+.warning {
+    background-color: var(--warning) !important;
+    color: var(--white) !important;
+}
+
+.danger {
+    background-color: var(--danger) !important;
+    color: var(--white) !important;
+}
 
 /* --- Inherent Button Styling & Universal States --- */
 button {
-    padding: 10px 24px;
+    padding: 0.625em 1.5em; /* 10px 24px */
     font-size: 0.9rem;
     font-weight: 600;
-    border-radius: 8px;
+    border-radius: 0.5em; /* 8px */
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: 'Inter', sans-serif;
@@ -45,7 +116,7 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 0.5em; /* 8px */
     /* Default Neutral State */
     background: var(--tertiary);
     color: hsl(0, 0%, 30%);
@@ -53,58 +124,145 @@ button {
 }
 
 /* Hover and Active Global Behavior */
-button:hover { transform: translateY(-1px); }
-button:active { transform: translateY(1px); }
+button:hover {
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
 
 /* --- Color Roles --- */
 
 /* Primary */
-button.primary { background: var(--primary); color: var(--white); border-color: hsl(211, 100%, 45%); }
-button.primary:hover { background: hsl(211, 100%, 45%); box-shadow: 0 4px 12px hsla(211, 100%, 50%, 0.25); }
-button.primary:active { background: hsl(211, 100%, 40%); box-shadow: none; }
+button.primary {
+    background: var(--primary);
+    color: var(--white);
+    border-color: hsl(211, 100%, 45%);
+}
+
+button.primary:hover {
+    background: hsl(211, 100%, 45%);
+    box-shadow: 0 4px 12px hsla(211, 100%, 50%, 0.25);
+}
+
+button.primary:active {
+    background: hsl(211, 100%, 40%);
+    box-shadow: none;
+}
 
 /* Secondary */
-button.secondary { background: var(--secondary); color: hsl(211, 100%, 20%); border-color: hsl(211, 15%, 80%); }
-button.secondary:hover { background: hsl(211, 15%, 80%); }
-button.secondary:active { background: hsl(211, 15%, 75%); }
+button.secondary {
+    background: var(--secondary);
+    color: hsl(211, 100%, 20%);
+    border-color: hsl(211, 15%, 80%);
+}
+
+button.secondary:hover {
+    background: hsl(211, 15%, 80%);
+}
+
+button.secondary:active {
+    background: hsl(211, 15%, 75%);
+}
 
 /* Tertiary */
-button.tertiary { background: transparent; border-color: transparent; color: hsl(0, 0%, 50%); }
-button.tertiary:hover { background: hsla(0, 0%, 0%, 0.05); color: hsl(0, 0%, 20%); }
-button.tertiary:active { background: hsla(0, 0%, 0%, 0.1); }
+button.tertiary {
+    background: transparent;
+    border-color: transparent;
+    color: hsl(0, 0%, 50%);
+}
+
+button.tertiary:hover {
+    background: hsla(0, 0%, 0%, 0.05);
+    color: hsl(0, 0%, 20%);
+}
+
+button.tertiary:active {
+    background: hsla(0, 0%, 0%, 0.1);
+}
 
 /* Danger */
-button.danger { background: var(--danger); color: var(--white); border-color: hsl(354, 70%, 50%); }
-button.danger:hover { background: hsl(354, 70%, 50%); box-shadow: 0 4px 12px hsla(354, 70%, 54%, 0.25); }
-button.danger:active { background: hsl(354, 70%, 45%); box-shadow: none; }
+button.danger {
+    background: var(--danger);
+    color: var(--white);
+    border-color: hsl(354, 70%, 50%);
+}
+
+button.danger:hover {
+    background: hsl(354, 70%, 50%);
+    box-shadow: 0 4px 12px hsla(354, 70%, 54%, 0.25);
+}
+
+button.danger:active {
+    background: hsl(354, 70%, 45%);
+    box-shadow: none;
+}
 
 /* Success */
-button.success { background: var(--success); color: var(--white); border-color: hsl(134, 61%, 38%); }
-button.success:hover { background: hsl(134, 61%, 38%); box-shadow: 0 4px 12px hsla(134, 61%, 41%, 0.25); }
-button.success:active { background: hsl(134, 61%, 35%); }
+button.success {
+    background: var(--success);
+    color: var(--white);
+    border-color: hsl(134, 61%, 38%);
+}
+
+button.success:hover {
+    background: hsl(134, 61%, 38%);
+    box-shadow: 0 4px 12px hsla(134, 61%, 41%, 0.25);
+}
+
+button.success:active {
+    background: hsl(134, 61%, 35%);
+}
 
 /* Brand */
-button.brand { background: var(--brand); color: var(--white); border-color: hsl(211, 100%, 35%); }
-button.brand:hover { background: hsl(211, 100%, 35%); box-shadow: 0 4px 12px hsla(211, 100%, 40%, 0.25); }
+button.brand {
+    background: var(--brand);
+    color: var(--white);
+    border-color: hsl(211, 100%, 35%);
+}
+
+button.brand:hover {
+    background: hsl(211, 100%, 35%);
+    box-shadow: 0 4px 12px hsla(211, 100%, 40%, 0.25);
+}
 
 /* --- Special Modifier: Outline --- */
 button.outline {
     background: transparent !important;
-    border: 2px solid currentColor !important; /* Thicker for clarity */
+    border: 2px solid currentColor !important;
+    /* Thicker for clarity */
 }
+
 /* Re-applying text colors for outline mode for each role */
-button.primary.outline { color: var(--primary) !important; }
-button.danger.outline { color: var(--danger) !important; }
-button.secondary.outline { color: hsl(211, 100%, 30%) !important; }
-button.success.outline { color: var(--success) !important; }
+button.primary.outline {
+    color: var(--primary) !important;
+}
+
+button.danger.outline {
+    color: var(--danger) !important;
+}
+
+button.secondary.outline {
+    color: hsl(211, 100%, 30%) !important;
+}
+
+button.success.outline {
+    color: var(--success) !important;
+}
 
 button.outline:hover {
     background: hsla(0, 0%, 0%, 0.03) !important;
 }
 
 /* Icon Position Utilities */
-button.icon-start { padding-left: 18px; }
-button.icon-end { padding-right: 18px; }
+button.icon-start {
+    padding-left: 18px;
+}
+
+button.icon-end {
+    padding-right: 18px;
+}
 
 /* Sidebar Styling - Converted IDs to classes for layout control */
 .app-sidebar-layout {
@@ -116,174 +274,146 @@ button.icon-end { padding-right: 18px; }
     z-index: 1000;
 }
 
-/* Main Content Styling */
+/* Main Content Styling (Scaffold) */
 .main-content-layout {
-    margin-left: var(--sidebar-width);
-    padding: 1.25em; /* 20px */
-    min-height: 100vh;
-}
-
-/* Navbar Tuning */
-.navbar {
-    background: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-    border-bottom: 1px solid #eee;
-    padding: 15px 25px;
-}
-
-/* Cards & Containers */
-.card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s;
-    margin-bottom: 20px;
-}
-
-.card:hover {
-    transform: translateY(-2px);
-}
-
-.card-header {
-    background-color: transparent;
-    border-bottom: 1px solid #f0f0f0;
-    padding: 15px 20px;
-    font-weight: 600;
-}
-
-/* Premium Buttons (Medium-sized) */
-.btn {
-    padding: 8px 16px;
-    font-weight: 500;
-    border-radius: 8px;
-    transition: all 0.2s;
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    border: none;
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-}
-
-.btn-primary:hover {
-    background-color: #0069d9;
-    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
-}
-
-/* Stats Cards */
-.stat-card {
     display: flex;
-    align-items: center;
-    padding: 25px;
+    flex-direction: column;
+    margin-left: var(--sidebar-width);
+    padding: 2em;
+    /* 32px standard scaffold padding */
+    gap: 3em;
+    /* Standard gap between major sections */
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-.stat-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
+/* Grid Layout Sub-containers - for usage inside layout sections */
+.grid-layout {
+    display: grid;
+    gap: 1.5em;
+    grid-template-columns: 1fr;
+    /* Full-width as default */
+}
+
+.grid-layout.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-layout.cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.main-content-layout>section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    /* standard gap between header and content blocks */
+}
+
+/* --- Avatar System --- */
+.avatar {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 20px;
-    font-size: 24px;
+    border-radius: 50%;
+    background: var(--tertiary);
+    border: 0.125em solid var(--white);
+    /* 2px */
+    color: hsl(0, 0%, 40%);
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 0.125em 0.25em hsla(0, 0%, 0%, 0.05);
+    flex-shrink: 0;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
-/* Side Sheet (Detail View) */
-#side-sheet {
-    position: fixed;
-    right: -80%;
-    top: 0;
-    width: 80%;
-    height: 100vh;
-    background: white;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-    z-index: 1050;
-    transition: right 0.3s ease-in-out;
-    padding: 30px;
-    overflow-y: auto;
+.avatar.sm {
+    width: 2em;
+    height: 2em;
+    font-size: 0.75em;
+}
+
+.avatar.md {
+    width: 2.5em;
+    height: 2.5em;
+    font-size: 0.875em;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-group {
     display: flex;
-    flex-direction: column;
-}
-
-#side-sheet .sheet-content {
-    flex-grow: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-}
-
-#side-sheet .sheet-content.single-column {
-    grid-template-columns: 1fr;
-}
-
-#side-sheet .sidesheet-left {
-    border-right: 1px solid #d9d9d9;
-    padding-right: 30px;
-}
-
-#side-sheet .sidesheet-right {
-    padding-left: 30px;
-}
-
-.sidesheet-footer {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding-top: 25px;
-    margin-top: 20px;
-    border-top: 1px solid #eee;
 }
 
-.sidesheet-btn {
-    width: 180px;
+.avatar-group .avatar {
+    margin-left: -0.75em;
+}
+
+.avatar-group .avatar:first-child {
+    margin-left: 0;
 }
 
 .extra-small {
     font-size: 0.75rem;
 }
 
-#side-sheet.open {
-    right: 0;
+/* --- Global Icon & Text Spacing --- */
+/* Ensures icons always have a gap when adjacent to text or other elements */
+i[class*="fa-"]:not(:only-child) {
+    margin-right: 0.5em;
 }
 
-.sheet-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.3);
-    z-index: 1040;
-    display: none;
+i[class*="fa-"]:last-child {
+    margin-right: 0;
+    margin-left: 0.5em;
 }
 
-.sheet-overlay.active {
-    display: block;
+/* Reset for containers that already use flex-gap to avoid double spacing */
+button i[class*="fa-"],
+.d-flex i[class*="fa-"],
+.avatar i[class*="fa-"] {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
 }
 
-/* Tables */
+/* Tables - Minimalist Foundation */
 .table {
-    background: white;
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
     border-radius: 12px;
     overflow: hidden;
 }
 
+.table th,
+.table td {
+    padding: 1.25em 1.5em;
+    text-align: left;
+    border-bottom: 0.0625em solid var(--border);
+}
+
 .table th {
-    background-color: #f8f9fa;
-    border-top: none;
+    background-color: hsl(0, 0%, 98%);
     font-weight: 600;
-    color: var(--secondary-color);
+    color: hsl(0, 0%, 40%);
+    font-size: 0.875em;
 }
 
-/* Badge Styling */
+.flex-1 {
+    flex: 1;
+}
+
+/* Badge Styling (Global Component) */
 .badge {
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-weight: 500;
-}
-
-/* Forecast View Specifics */
-.chart-container {
-    height: 300px;
-    width: 100%;
+    padding: 0.25em 0.75em;
+    border-radius: 0.375em;
+    font-weight: 600;
+    font-size: 0.75em;
+    display: inline-flex;
 }

@@ -6,6 +6,8 @@ const App = (() => {
     let currentView = 'dashboard';
     const mainContent = document.getElementById('main-content');
     const sideSheet = document.getElementById('side-sheet');
+    const modal = document.getElementById('app-modal');
+    const snackbar = document.getElementById('app-snackbar');
 
     const init = async () => {
         setupListeners();
@@ -97,30 +99,8 @@ const App = (() => {
     };
 
     const updateSidesheetContent = (html) => {
-        // We need to parse the returned HTML and slot it correctly
-        const div = document.createElement('div');
-        div.innerHTML = html;
-        
-        // Remove old content
-        sideSheet.innerHTML = '';
-        
-        // Slot content
-        const left = div.querySelector('.sidesheet-left');
-        const right = div.querySelector('.sidesheet-right');
-        const footer = div.querySelector('.sidesheet-footer');
-        
-        if (left) {
-            left.setAttribute('slot', 'left');
-            sideSheet.appendChild(left);
-        }
-        if (right) {
-            right.setAttribute('slot', 'right');
-            sideSheet.appendChild(right);
-        }
-        if (footer) {
-            footer.setAttribute('slot', 'footer');
-            sideSheet.appendChild(footer);
-        }
+        // New system: View returns pre-slotted HTML blocks
+        sideSheet.innerHTML = html;
     };
 
     const hideDetail = () => {
@@ -177,8 +157,9 @@ const App = (() => {
             await API.savePackage(pkgData);
             hideDetail();
             render(); // Refresh list
+            showSnackbar("Package saved successfully", "success");
         } catch (error) {
-            alert("Error saving package");
+            showAlert("Save Failed", "Error saving package", "danger");
             submitBtn.disabled = false;
             submitBtn.innerHTML = 'Save Template';
         }
@@ -335,8 +316,9 @@ const App = (() => {
             await API.saveTeam(teamData);
             hideDetail();
             render();
+            showSnackbar("Team settings updated", "success");
         } catch (error) {
-            alert("Error saving team settings");
+            showAlert("Update Failed", "Error saving team settings", "danger");
             submitBtn.disabled = false;
             submitBtn.innerHTML = 'Save Changes';
         }
@@ -347,42 +329,42 @@ const App = (() => {
         if (!container) return;
 
         const row = document.createElement('div');
-        row.className = 'list-group-item px-0 py-3 assignment-type-row';
+        row.className = 'py-3 assignment-type-row border-bottom d-flex justify-content-between align-items-start gap-4';
         row.innerHTML = `
-            <div class="row g-2">
-                <div class="col-8">
-                    <input type="text" class="form-control form-control-sm border-0 fw-bold at-name" placeholder="New Service Name">
-                </div>
-                <div class="col-4 text-end">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-text bg-transparent border-0 pe-1">฿</span>
-                        <input type="number" class="form-control border-0 fw-bold p-0 at-price text-end" value="0">
-                    </div>
-                </div>
-                <div class="col-10">
-                    <input type="text" class="form-control form-control-sm border-0 text-muted extra-small p-0 at-desc" placeholder="Brief description...">
-                </div>
-                <div class="col-2 text-end">
-                    <button type="button" class="btn btn-link btn-sm text-danger p-0" onclick="this.closest('.assignment-type-row').remove()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+            <div class="flex-1 d-flex flex-column gap-1">
+                <input type="text" class="form-control border-0 fw-bold at-name p-0 bg-transparent" placeholder="New Service Name" form="sidesheet-form">
+                <input type="text" class="form-control border-0 text-muted extra-small at-desc p-0 bg-transparent" placeholder="Brief description..." form="sidesheet-form">
             </div>
-            <input type="hidden" class="at-id" value="">
+            <div class="d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center d-none">
+                    <span class="primary fw-bold me-1">฿</span>
+                    <input type="number" class="form-control border-0 fw-bold p-0 at-price text-end bg-transparent" style="width: 60px;" value="0" form="sidesheet-form">
+                </div>
+                <button type="button" class="tertiary" style="padding: 4px; min-width: auto; height: auto;" onclick="this.closest('.assignment-type-row').remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <input type="hidden" class="at-id" value="" form="sidesheet-form">
         `;
         container.appendChild(row);
     };
 
     const handleDeletePackage = async (id) => {
-        if (confirm("Are you sure you want to delete this package template? This cannot be undone.")) {
-            try {
-                await API.deletePackage(id);
-                hideDetail();
-                render();
-            } catch (error) {
-                alert("Error deleting package");
-            }
-        }
+        showConfirm(
+            "Delete Package",
+            "Are you sure you want to delete this package template? This cannot be undone.",
+            async () => {
+                try {
+                    await API.deletePackage(id);
+                    hideDetail();
+                    render();
+                    showSnackbar("Package deleted", "success");
+                } catch (error) {
+                    showAlert("Delete Failed", "Error deleting package", "danger");
+                }
+            },
+            () => showSnackbar("Deletion cancelled", "info")
+        );
     };
 
     const handleSaveStaff = async (e) => {
@@ -405,13 +387,26 @@ const App = (() => {
             await API.saveStaff(staffData);
             hideDetail();
             render();
+            showSnackbar("Staff updated successfully", "success");
         } catch (error) {
-            alert("Error saving staff details");
+            showAlert("Save Failed", "Error saving staff details", "danger");
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Save Changes';
             }
         }
+    };
+
+    const showAlert = (title, message, type = 'info') => {
+        modal.show({ title, message, type: 'alert' });
+    };
+
+    const showConfirm = (title, message, onConfirm, onCancel) => {
+        modal.show({ title, message, type: 'confirm', onConfirm, onCancel });
+    };
+
+    const showSnackbar = (message, type = 'info') => {
+        snackbar.show(message, type);
     };
 
     return {
@@ -430,7 +425,10 @@ const App = (() => {
         handleAutocomplete,
         selectAssignmentType,
         handleSaveTeam,
-        addAssignmentRow
+        addAssignmentRow,
+        showAlert,
+        showConfirm,
+        showSnackbar
     };
 })();
 

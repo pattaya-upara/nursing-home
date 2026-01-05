@@ -1,0 +1,73 @@
+:host {
+    position: fixed;
+    bottom: 2em;
+    right: 2em;
+    z-index: 3000;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+}
+
+.snackbar {
+    pointer-events: auto;
+    background: var(--white);
+    padding: 1em 1.5em;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    min-width: 300px;
+    max-width: 450px;
+    border-left: 4px solid var(--primary);
+    animation: snackbar-enter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s ease;
+}
+
+@keyframes snackbar-enter {
+    from { opacity: 0; transform: translateX(50px) scale(0.9); }
+    to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.snackbar.leaving {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+}
+
+.snackbar.success { border-left-color: var(--success); }
+.snackbar.danger { border-left-color: var(--danger); }
+.snackbar.info { border-left-color: var(--primary); }
+
+.icon {
+    font-size: 1.25em;
+    flex-shrink: 0;
+}
+
+.success .icon { color: var(--success); }
+.danger .icon { color: var(--danger); }
+.info .icon { color: var(--primary); }
+
+.content {
+    flex: 1;
+    font-size: 0.9em;
+    font-weight: 500;
+    color: hsl(0, 0%, 20%);
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: hsl(0, 0%, 60%);
+    cursor: pointer;
+    padding: 0.25em;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: hsl(0, 0%, 20%);
+}

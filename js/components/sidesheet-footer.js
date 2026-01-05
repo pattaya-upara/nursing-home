@@ -35,14 +35,14 @@ class SidesheetFooter extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <link rel="stylesheet" href="css/foundation/elements.css">
             <link rel="stylesheet" href="css/components/sidesheet-footer.css">
-            <div class="footer">
-                <button type="button" class="secondary" id="cancel-btn">${this.cancelLabel}</button>
-                <div class="group">
-                    <slot name="extra-actions"></slot>
+            <button type="button" class="tertiary" id="cancel-btn">${this.cancelLabel}</button>
+            <div class="group">
+                <slot name="extra-actions"></slot>
+                <slot name="save-btn">
                     <button type="submit" class="primary" id="save-btn" ${this.isLoading ? 'disabled' : ''}>
                         ${this.isLoading ? 'Processing...' : this.saveLabel}
                     </button>
-                </div>
+                </slot>
             </div>
         `;
 
