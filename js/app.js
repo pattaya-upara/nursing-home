@@ -15,7 +15,7 @@ const App = (() => {
     };
 
     const setupListeners = () => {
-        // Handle Sidebar Navigation (works for slotted elements)
+        // Handle Navigation
         document.addEventListener('click', (e) => {
             const link = e.target.closest('.nav-link');
             if (link && link.closest('#sidebar')) {
@@ -46,7 +46,7 @@ const App = (() => {
     const navigateTo = (view) => {
         currentView = view;
 
-        // Update Sidebar UI (works inside the slotted container)
+        // Update Navigation UI
         document.querySelectorAll('#sidebar .nav-link').forEach(link => {
             link.classList.toggle('active', link.getAttribute('data-view') === view);
         });
@@ -80,21 +80,34 @@ const App = (() => {
     };
 
     const showDetail = async (type, id) => {
-        sideSheet.innerHTML = '<div slot="left" class="text-center mt-5"><div class="spinner-border text-primary" role="status"></div></div>';
+        sideSheet.innerHTML = '<div class="text-center" style="padding: 3em;"><div class="spinner-border text-primary" role="status"></div></div>';
         sideSheet.setAttribute('open', '');
-        sideSheet.setAttribute('title', type.charAt(0).toUpperCase() + type.slice(1) + ' Details');
 
         if (type === 'package') {
             const pkg = await API.getPackageById(id);
-            updateSidesheetContent(PackageView.renderDetail(pkg));
+            // #region agent log
+            fetch('http://127.0.0.1:7244/ingest/519f29c6-6d7a-4252-9040-eba6090f87cd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app.js:87',message:'showDetail: package found',data:{pkgId:pkg.id,pkgName:pkg.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            // #endregion
+            sideSheet.setAttribute('title', pkg.name || 'Package Details');
+            updateSidesheetContent(PackageView.renderDetail(pkg, 'display'));
+            // Set up initial button state
+            setTimeout(() => {
+                updateEditButton(pkg.id, 'display');
+            }, 0);
         } else if (type === 'team') {
             const teams = await API.getTeams();
             const team = teams.find(t => t.id === id);
-            updateSidesheetContent(TeamView.renderDetail(team));
+            if (team) {
+                sideSheet.setAttribute('title', team.name || 'Team Details');
+                updateSidesheetContent(TeamView.renderDetail(team, 'display'));
+            }
         } else if (type === 'staff') {
             const staffList = await API.getStaff();
             const staff = staffList.find(s => s.id === id);
-            updateSidesheetContent(StaffView.renderDetail(staff));
+            if (staff) {
+                sideSheet.setAttribute('title', staff.name || 'Staff Details');
+                updateSidesheetContent(StaffView.renderDetail(staff, 'display'));
+            }
         }
     };
 
@@ -114,30 +127,201 @@ const App = (() => {
         updateServicePriceSummary();
     };
 
+    const toggleTeamEditMode = async (id) => {
+        const teams = await API.getTeams();
+        const team = teams.find(t => t.id === id);
+        if (!team) return;
+        
+        const btn = document.getElementById(`edit-save-btn-${id}`);
+        if (!btn) return;
+        
+        const isEditMode = btn.textContent === 'Edit Team';
+        const newMode = isEditMode ? 'edit' : 'display';
+        updateSidesheetContent(TeamView.renderDetail(team, newMode));
+        
+        // Set up form submission if switching to edit mode
+        if (newMode === 'edit') {
+            setTimeout(() => {
+                const form = document.getElementById('sidesheet-form');
+                if (form) {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        handleSaveTeam(e);
+                    });
+                }
+            }, 0);
+        }
+    };
+
+    const toggleStaffEditMode = async (id) => {
+        const staffList = await API.getStaff();
+        const staff = staffList.find(s => s.id === id);
+        if (!staff) return;
+        
+        const btn = document.getElementById(`edit-save-btn-${id}`);
+        if (!btn) return;
+        
+        const isEditMode = btn.textContent === 'Edit Staff';
+        const newMode = isEditMode ? 'edit' : 'display';
+        updateSidesheetContent(StaffView.renderDetail(staff, newMode));
+        
+        // Set up form submission if switching to edit mode
+        if (newMode === 'edit') {
+            setTimeout(() => {
+                const form = document.getElementById('sidesheet-form');
+                if (form) {
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        handleSaveStaff(e);
+                    });
+                }
+            }, 0);
+        }
+    };
+
+    const toggleEditMode = async (id) => {
+        const btn = document.getElementById(`edit-save-btn-${id}`);
+        if (!btn) return;
+        
+        const currentMode = btn.textContent === 'Edit Package' ? 'display' : 'edit';
+        const newMode = currentMode === 'display' ? 'edit' : 'display';
+        
+        if (newMode === 'edit') {
+            // Enter edit mode - reload package and render in edit mode
+            const pkg = await API.getPackageById(id);
+            sideSheet.setAttribute('title', pkg.name || 'Package Details');
+            updateSidesheetContent(PackageView.renderDetail(pkg, 'edit'));
+            updateEditButton(id, 'edit');
+        } else {
+            // Save changes
+            const form = document.querySelector('#sidesheet-form');
+            if (form) {
+                const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                form.dispatchEvent(submitEvent);
+                if (!submitEvent.defaultPrevented) {
+                    await handleSavePackage({ target: form, preventDefault: () => {} });
+                }
+            }
+        }
+    };
+
     const showEditPackage = async (id) => {
         const pkg = await API.getPackageById(id);
-        sideSheet.innerHTML = PackageView.renderCreateForm(pkg);
-        updateServicePriceSummary();
+        sideSheet.setAttribute('open', '');
+        sideSheet.setAttribute('title', 'Package Details');
+        sideSheet.innerHTML = `
+            <package-details id="package-details-${pkg.id}" package-data='${JSON.stringify(pkg).replace(/'/g, "&#39;")}' mode="display"></package-details>
+            <sidesheet-footer slot="footer" id="package-footer-${pkg.id}">
+                <button class="danger outline" slot="extra-actions" onclick="App.handleDeletePackage('${pkg.id}')">Delete Package</button>
+                <button class="primary" id="edit-save-btn-${pkg.id}" onclick="App.toggleEditMode('${pkg.id}')">Edit Package</button>
+            </sidesheet-footer>
+        `;
+        
+        // Listen for mode changes to update button
+        const packageDetails = document.getElementById(`package-details-${pkg.id}`);
+        if (packageDetails) {
+            packageDetails.addEventListener('mode-changed', (e) => {
+                updateEditButton(id, e.detail.mode);
+            });
+        }
+    };
+
+    const updateEditButton = (id, mode) => {
+        const btn = document.getElementById(`edit-save-btn-${id}`);
+        // #region agent log
+        fetch('http://127.0.0.1:7244/ingest/519f29c6-6d7a-4252-9040-eba6090f87cd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app.js:168',message:'updateEditButton called',data:{id,mode,btnFound:!!btn,btnTextBefore:btn?.textContent,btnTypeBefore:btn?.getAttribute('type'),btnFormBefore:btn?.getAttribute('form')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+        // #endregion
+        if (!btn) {
+            // #region agent log
+            fetch('http://127.0.0.1:7244/ingest/519f29c6-6d7a-4252-9040-eba6090f87cd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app.js:170',message:'Button not found',data:{id,mode},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+            // #endregion
+            return;
+        }
+        
+        if (mode === 'edit') {
+            btn.textContent = 'Save Changes';
+            btn.setAttribute('type', 'submit');
+            btn.setAttribute('form', 'sidesheet-form');
+            // Remove onclick - submit button will naturally submit the form
+            btn.removeAttribute('onclick');
+            btn.onclick = null;
+            // Update sidesheet title
+            const sideSheet = document.getElementById('side-sheet');
+            if (sideSheet) {
+                sideSheet.setAttribute('title', 'Edit Package');
+            }
+            // #region agent log
+            fetch('http://127.0.0.1:7244/ingest/519f29c6-6d7a-4252-9040-eba6090f87cd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app.js:173',message:'Button updated to Save Changes',data:{id,mode,btnTextAfter:btn.textContent,btnTypeAfter:btn.getAttribute('type'),btnFormAfter:btn.getAttribute('form')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            // #endregion
+        } else {
+            btn.textContent = 'Edit Package';
+            btn.removeAttribute('type');
+            btn.removeAttribute('form');
+            // Restore onclick handler for edit mode
+            btn.setAttribute('onclick', `App.toggleEditMode('${id}')`);
+            btn.onclick = function() { App.toggleEditMode(id); };
+            // Title stays as item name, no need to change
+            // #region agent log
+            fetch('http://127.0.0.1:7244/ingest/519f29c6-6d7a-4252-9040-eba6090f87cd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app.js:185',message:'Button updated to Edit Package',data:{id,mode,btnTextAfter:btn.textContent,btnTypeAfter:btn.getAttribute('type'),btnFormAfter:btn.getAttribute('form'),btnOnclickAfter:btn.getAttribute('onclick'),btnVisible:btn.offsetParent!==null,btnDisplay:window.getComputedStyle(btn).display},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            // #endregion
+            // Check button state after a short delay to see if it gets overwritten
+            setTimeout(() => {
+                const btnAfter = document.getElementById(`edit-save-btn-${id}`);
+                // #region agent log
+                fetch('http://127.0.0.1:7244/ingest/519f29c6-6d7a-4252-9040-eba6090f87cd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app.js:197',message:'Button state check after delay',data:{id,mode,btnFound:!!btnAfter,btnTextAfterDelay:btnAfter?.textContent,btnTypeAfterDelay:btnAfter?.getAttribute('type')},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+                // #endregion
+            }, 100);
+        }
     };
 
     const handleSavePackage = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
 
-        // Collect services
+        // Collect services from package-details component (light DOM)
         const services = [];
-        const serviceRows = document.querySelectorAll('.service-row');
-        serviceRows.forEach(row => {
-            const inputs = row.querySelectorAll('input, select');
-            if (inputs.length >= 4) {
-                services.push({
-                    title: inputs[0].value,
-                    dept: inputs[1].value,
-                    interval: inputs[2].value,
-                    price: parseFloat(inputs[3].value) || 0
-                });
-            }
-        });
+        const packageDetails = document.querySelector('package-details');
+        
+        if (packageDetails) {
+            const serviceItems = packageDetails.querySelectorAll('.service-item-edit');
+            serviceItems.forEach(item => {
+                const titleInput = item.querySelector('.service-title-input');
+                const deptInput = item.querySelector('.dept-input');
+                const intervalInput = item.querySelector('.service-interval-input');
+                const priceInput = item.querySelector('.service-price-input');
+                const descInput = item.querySelector('.service-description-input');
+                
+                if (titleInput && titleInput.value.trim()) {
+                    services.push({
+                        title: titleInput.value.trim(),
+                        dept: deptInput ? deptInput.value : '',
+                        interval: intervalInput ? intervalInput.value : '',
+                        price: parseFloat(priceInput ? priceInput.value : 0) || 0,
+                        description: descInput ? descInput.value : ''
+                    });
+                }
+            });
+        } else {
+            // Fallback to old form structure if package-details not found
+            const serviceRows = document.querySelectorAll('.service-row');
+            serviceRows.forEach(row => {
+                const titleInput = row.querySelector('.service-title-input');
+                const deptInput = row.querySelector('.dept-input');
+                const intervalInput = row.querySelector('.interval-input');
+                const priceInput = row.querySelector('.base-price-input');
+                const descInput = row.querySelector('.description-input');
+                
+                if (titleInput && titleInput.value.trim()) {
+                    services.push({
+                        title: titleInput.value.trim(),
+                        dept: deptInput ? deptInput.value : '',
+                        interval: intervalInput ? intervalInput.value : '',
+                        price: parseFloat(priceInput ? priceInput.value : 0) || 0,
+                        description: descInput ? descInput.value : ''
+                    });
+                }
+            });
+        }
 
         const pkgData = {
             id: formData.get('id') || null,
@@ -148,20 +332,30 @@ const App = (() => {
             services: services
         };
 
-        const submitBtn = document.querySelector('button[type="submit"][form="package-form"]');
+        const submitBtn = e.target.querySelector('button[type="submit"]') || document.querySelector('button[type="submit"][form="sidesheet-form"]');
 
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Saving...';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Saving...';
 
-        try {
-            await API.savePackage(pkgData);
-            hideDetail();
-            render(); // Refresh list
-            showSnackbar("Package saved successfully", "success");
-        } catch (error) {
-            showAlert("Save Failed", "Error saving package", "danger");
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = 'Save Template';
+            try {
+                await API.savePackage(pkgData);
+                // Switch back to display mode instead of closing
+                const pkgId = pkgData.id;
+                // Reload package data to show updated values
+                const updatedPkg = await API.getPackageById(pkgId);
+                sideSheet.setAttribute('title', updatedPkg.name || 'Package Details');
+                updateSidesheetContent(PackageView.renderDetail(updatedPkg, 'display'));
+                // Update button back to Edit
+                updateEditButton(pkgId, 'display');
+                render(); // Refresh list
+                showSnackbar("Package saved successfully", "success");
+            } catch (error) {
+                showAlert("Save Failed", "Error saving package", "danger");
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
         }
     };
 
@@ -314,8 +508,13 @@ const App = (() => {
 
         try {
             await API.saveTeam(teamData);
-            hideDetail();
-            render();
+            // Switch back to display mode instead of closing
+            const teams = await API.getTeams();
+            const updatedTeam = teams.find(t => t.id === teamId);
+            if (updatedTeam) {
+                updateSidesheetContent(TeamView.renderDetail(updatedTeam, 'display'));
+            }
+            render(); // Refresh list
             showSnackbar("Team settings updated", "success");
         } catch (error) {
             showAlert("Update Failed", "Error saving team settings", "danger");
@@ -385,8 +584,13 @@ const App = (() => {
 
         try {
             await API.saveStaff(staffData);
-            hideDetail();
-            render();
+            // Switch back to display mode instead of closing
+            const staffList = await API.getStaff();
+            const updatedStaff = staffList.find(s => s.id === staffData.id);
+            if (updatedStaff) {
+                updateSidesheetContent(StaffView.renderDetail(updatedStaff, 'display'));
+            }
+            render(); // Refresh list
             showSnackbar("Staff updated successfully", "success");
         } catch (error) {
             showAlert("Save Failed", "Error saving staff details", "danger");
@@ -415,6 +619,8 @@ const App = (() => {
         hideDetail,
         showCreatePackage,
         showEditPackage,
+        toggleEditMode,
+        updateEditButton,
         handleSavePackage,
         handleDeletePackage,
         handleSaveStaff,

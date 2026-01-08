@@ -29,6 +29,11 @@ body {
 }
 
 /* --- Semantic Utility Classes --- */
+.d-flex {
+    display: flex !important;
+    gap: 1em; /* 16px default built-in gap */
+}
+
 .brand {
     color: var(--brand) !important;
 }
@@ -103,166 +108,9 @@ h3.tertiary {
     color: var(--white) !important;
 }
 
-/* --- Inherent Button Styling & Universal States --- */
-button {
-    padding: 0.625em 1.5em; /* 10px 24px */
-    font-size: 0.9rem;
-    font-weight: 600;
-    border-radius: 0.5em; /* 8px */
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: 'Inter', sans-serif;
-    border: 1px solid transparent;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em; /* 8px */
-    /* Default Neutral State */
-    background: var(--tertiary);
-    color: hsl(0, 0%, 30%);
-    border-color: hsl(0, 0%, 90%);
-}
-
-/* Hover and Active Global Behavior */
-button:hover {
-    transform: translateY(-1px);
-}
-
-button:active {
-    transform: translateY(1px);
-}
-
-/* --- Color Roles --- */
-
-/* Primary */
-button.primary {
-    background: var(--primary);
-    color: var(--white);
-    border-color: hsl(211, 100%, 45%);
-}
-
-button.primary:hover {
-    background: hsl(211, 100%, 45%);
-    box-shadow: 0 4px 12px hsla(211, 100%, 50%, 0.25);
-}
-
-button.primary:active {
-    background: hsl(211, 100%, 40%);
-    box-shadow: none;
-}
-
-/* Secondary */
-button.secondary {
-    background: var(--secondary);
-    color: hsl(211, 100%, 20%);
-    border-color: hsl(211, 15%, 80%);
-}
-
-button.secondary:hover {
-    background: hsl(211, 15%, 80%);
-}
-
-button.secondary:active {
-    background: hsl(211, 15%, 75%);
-}
-
-/* Tertiary */
-button.tertiary {
-    background: transparent;
-    border-color: transparent;
-    color: hsl(0, 0%, 50%);
-}
-
-button.tertiary:hover {
-    background: hsla(0, 0%, 0%, 0.05);
-    color: hsl(0, 0%, 20%);
-}
-
-button.tertiary:active {
-    background: hsla(0, 0%, 0%, 0.1);
-}
-
-/* Danger */
-button.danger {
-    background: var(--danger);
-    color: var(--white);
-    border-color: hsl(354, 70%, 50%);
-}
-
-button.danger:hover {
-    background: hsl(354, 70%, 50%);
-    box-shadow: 0 4px 12px hsla(354, 70%, 54%, 0.25);
-}
-
-button.danger:active {
-    background: hsl(354, 70%, 45%);
-    box-shadow: none;
-}
-
-/* Success */
-button.success {
-    background: var(--success);
-    color: var(--white);
-    border-color: hsl(134, 61%, 38%);
-}
-
-button.success:hover {
-    background: hsl(134, 61%, 38%);
-    box-shadow: 0 4px 12px hsla(134, 61%, 41%, 0.25);
-}
-
-button.success:active {
-    background: hsl(134, 61%, 35%);
-}
-
-/* Brand */
-button.brand {
-    background: var(--brand);
-    color: var(--white);
-    border-color: hsl(211, 100%, 35%);
-}
-
-button.brand:hover {
-    background: hsl(211, 100%, 35%);
-    box-shadow: 0 4px 12px hsla(211, 100%, 40%, 0.25);
-}
-
-/* --- Special Modifier: Outline --- */
-button.outline {
-    background: transparent !important;
-    border: 2px solid currentColor !important;
-    /* Thicker for clarity */
-}
-
-/* Re-applying text colors for outline mode for each role */
-button.primary.outline {
-    color: var(--primary) !important;
-}
-
-button.danger.outline {
-    color: var(--danger) !important;
-}
-
-button.secondary.outline {
-    color: hsl(211, 100%, 30%) !important;
-}
-
-button.success.outline {
-    color: var(--success) !important;
-}
-
-button.outline:hover {
-    background: hsla(0, 0%, 0%, 0.03) !important;
-}
-
-/* Icon Position Utilities */
-button.icon-start {
-    padding-left: 18px;
-}
-
-button.icon-end {
-    padding-right: 18px;
-}
+/* --- Button Styles Consolidated to css/foundation/elements.css --- */
+/* Base button styles and semantic classes are now defined in elements.css */
+/* This file retains semantic utility classes for other elements */
 
 /* Sidebar Styling - Converted IDs to classes for layout control */
 .app-sidebar-layout {

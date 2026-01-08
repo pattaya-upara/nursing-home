@@ -32,6 +32,14 @@ class SidesheetFooter extends HTMLElement {
     }
 
     render() {
+        // #region agent log
+        const lightDomButtons = Array.from(this.querySelectorAll('button')).map(btn => ({
+            id: btn.id,
+            text: btn.textContent,
+            onclick: btn.getAttribute('onclick')
+        }));
+        fetch('http://127.0.0.1:7244/ingest/519f29c6-6d7a-4252-9040-eba6090f87cd',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'sidesheet-footer.js:34',message:'sidesheet-footer render called',data:{lightDomButtons,hasSaveLabel:!!this.saveLabel,saveLabel:this.saveLabel},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+        // #endregion
         this.shadowRoot.innerHTML = `
             <link rel="stylesheet" href="css/foundation/elements.css">
             <link rel="stylesheet" href="css/components/sidesheet-footer.css">

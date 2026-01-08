@@ -54,59 +54,48 @@ const StaffView = (() => {
             `;
         },
 
-        renderDetail: (staff) => {
-            return `
-                <div slot="left">
-                    <!-- TOP: Staff Information -->
-                    <section class="mb-4">
-                        <label class="text-muted small d-block mb-1">Full Name</label>
-                        <div class="h5 mb-0">${staff.name}</div>
-                    </section>
+        renderDetail: (staff, mode = 'display') => {
+            const isEditMode = mode === 'edit';
 
-                    <section class="mb-4">
-                        <label class="text-muted small d-block mb-1">Staff ID</label>
-                        <div class="fw-bold">${staff.id}</div>
-                    </section>
-
-                    <section class="mb-4">
-                        <label class="text-muted small d-block mb-1">Department</label>
-                        <span class="badge tertiary">${staff.dept}</span>
-                    </section>
-
-                    <!-- BOTTOM: Additional Info -->
-                    <footer class="mt-5 pt-4 border-top">
-                        <h6 class="mb-3">Current Assignment</h6>
-                        <p class="text-muted small">Active in the ${staff.dept} department</p>
-                    </footer>
-                </div>
-
-                <div slot="right">
-                    <input type="hidden" name="id" value="${staff.id}" form="sidesheet-form">
-                    
-                    <div class="mb-4">
-                        <label class="form-label text-muted small d-block mb-2">Role</label>
-                        <input type="text" class="form-control bg-light border p-2" name="role" form="sidesheet-form" value="${staff.role || ''}">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label text-muted small d-block mb-2">Status</label>
-                        <select class="form-select bg-light border p-2" name="status" form="sidesheet-form">
-                            <option value="Active" ${staff.status === 'Active' ? 'selected' : ''}>Active</option>
-                            <option value="Inactive" ${staff.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
-                            <option value="Leave" ${staff.status === 'Leave' ? 'selected' : ''}>On Leave</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label text-muted small d-block mb-2">Department</label>
-                        <input type="text" class="form-control bg-light border p-2" name="dept" form="sidesheet-form" value="${staff.dept || ''}" disabled>
-                    </div>
-                </div>
-
-                <sidesheet-footer slot="footer">
-                    <button class="primary" slot="save-btn" type="submit" form="sidesheet-form">Save Changes</button>
-                </sidesheet-footer>
+            // Left Pane: Staff Information
+            const leftPane = `
+                ${SidesheetHelper.buildLeftSection('Full Name', `<div class="h5 mb-0">${SidesheetHelper.escapeHtml(staff.name)}</div>`)}
+                ${SidesheetHelper.buildLeftSection('Staff ID', `<div class="fw-bold">${SidesheetHelper.escapeHtml(staff.id)}</div>`)}
+                ${SidesheetHelper.buildLeftSection('Department', `<span class="badge tertiary">${SidesheetHelper.escapeHtml(staff.dept)}</span>`)}
+                
+                <footer class="mt-5 pt-4 border-top">
+                    <h6 class="mb-3">Current Assignment</h6>
+                    <p class="text-muted small">Active in the ${SidesheetHelper.escapeHtml(staff.dept)} department</p>
+                </footer>
             `;
+
+            // Right Pane: Form Fields
+            const rightPaneContent = `
+                ${SidesheetHelper.buildField('Role', isEditMode ? 
+                    `<input type="text" class="form-control" name="role" form="sidesheet-form" value="${SidesheetHelper.escapeHtml(staff.role || '')}">` :
+                    `<div class="fw-bold">${SidesheetHelper.escapeHtml(staff.role || 'N/A')}</div>`
+                )}
+                ${SidesheetHelper.buildField('Status', isEditMode ? 
+                    `<select class="form-select" name="status" form="sidesheet-form">
+                        <option value="Active" ${staff.status === 'Active' ? 'selected' : ''}>Active</option>
+                        <option value="Inactive" ${staff.status === 'Inactive' ? 'selected' : ''}>Inactive</option>
+                        <option value="Leave" ${staff.status === 'Leave' ? 'selected' : ''}>On Leave</option>
+                    </select>` :
+                    `<span class="badge success">${SidesheetHelper.escapeHtml(staff.status || 'N/A')}</span>`
+                )}
+                ${SidesheetHelper.buildField('Department', `<div class="fw-bold">${SidesheetHelper.escapeHtml(staff.dept || 'N/A')}</div>`)}
+            `;
+
+            const rightPane = SidesheetHelper.buildForm('sidesheet-form', staff.id, rightPaneContent);
+
+            return SidesheetHelper.buildSidesheet({
+                leftPane,
+                rightPane,
+                footerId: `staff-footer-${staff.id}`,
+                entityId: staff.id,
+                isEditMode,
+                editHandler: 'App.toggleStaffEditMode'
+            });
         }
     };
 })();

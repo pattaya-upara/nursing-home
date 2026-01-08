@@ -2,7 +2,8 @@
 
 /* Buttons */
 button {
-    padding: 0.625em 1.5em; /* 10px 24px -> 0.625em 1.5em */
+    height: 2.375em; /* 38px at 16px base */
+    padding: 0 1.5em; /* 24px horizontal */
     font-size: 0.875em; /* 14px */
     font-weight: 500;
     border-radius: 0.5em; /* 8px */
@@ -14,6 +15,7 @@ button {
     align-items: center;
     justify-content: center;
     gap: 0.5em; /* 8px */
+    box-sizing: border-box;
     /* Default Neutral State */
     background: var(--tertiary);
     color: hsl(0, 0%, 30%);
@@ -27,23 +29,103 @@ button:active { transform: translateY(1px); }
 button.primary {
     background: var(--primary);
     color: var(--white);
-    border-color: hsla(211, 100%, 50%, 0.1);
+    border-color: hsl(211, 100%, 45%);
 }
 button.primary:hover {
     background: hsl(211, 100%, 45%);
     box-shadow: 0 4px 12px hsla(211, 100%, 50%, 0.25);
+}
+button.primary:active {
+    background: hsl(211, 100%, 40%);
+    box-shadow: none;
 }
 
 /* Secondary States */
 button.secondary {
     background: var(--secondary);
     color: hsl(211, 100%, 20%);
+    border-color: hsl(211, 15%, 80%);
+}
+button.secondary:hover {
+    background: hsl(211, 15%, 80%);
+}
+button.secondary:active {
+    background: hsl(211, 15%, 75%);
+}
+
+/* Tertiary States */
+button.tertiary {
+    background: transparent;
+    border-color: transparent;
+    color: hsl(0, 0%, 50%);
+}
+button.tertiary:hover {
+    background: hsla(0, 0%, 0%, 0.05);
+    color: hsl(0, 0%, 20%);
+}
+button.tertiary:active {
+    background: hsla(0, 0%, 0%, 0.1);
 }
 
 /* Danger States */
 button.danger {
     background: var(--danger);
     color: var(--white);
+    border-color: hsl(354, 70%, 50%);
+}
+button.danger:hover {
+    background: hsl(354, 70%, 50%);
+    box-shadow: 0 4px 12px hsla(354, 70%, 54%, 0.25);
+}
+button.danger:active {
+    background: hsl(354, 70%, 45%);
+    box-shadow: none;
+}
+
+/* Success States */
+button.success {
+    background: var(--success);
+    color: var(--white);
+    border-color: hsl(134, 61%, 38%);
+}
+button.success:hover {
+    background: hsl(134, 61%, 38%);
+    box-shadow: 0 4px 12px hsla(134, 61%, 41%, 0.25);
+}
+button.success:active {
+    background: hsl(134, 61%, 35%);
+}
+
+/* Brand States */
+button.brand {
+    background: var(--brand);
+    color: var(--white);
+    border-color: hsl(211, 100%, 35%);
+}
+button.brand:hover {
+    background: hsl(211, 100%, 35%);
+    box-shadow: 0 4px 12px hsla(211, 100%, 40%, 0.25);
+}
+
+/* Outline Modifier */
+button.outline {
+    background: transparent !important;
+    border: 2px solid currentColor !important;
+}
+button.primary.outline {
+    color: var(--primary) !important;
+}
+button.danger.outline {
+    color: var(--danger) !important;
+}
+button.secondary.outline {
+    color: hsl(211, 100%, 30%) !important;
+}
+button.success.outline {
+    color: var(--success) !important;
+}
+button.outline:hover {
+    background: hsla(0, 0%, 0%, 0.03) !important;
 }
 
 /* Icon Spacing Rules */
@@ -51,20 +133,116 @@ button.icon-start { padding-left: 18px; }
 button.icon-end { padding-right: 18px; }
 
 /* Form Fields */
-input, textarea, select {
+input:not([type="checkbox"]):not([type="radio"]), 
+select,
+textarea {
     width: 100%;
-    padding: 0.75em 1em; /* 12px 16px */
     border: 0.0625em solid var(--border);
     border-radius: 0.5em; /* 8px */
-    font-size: 0.9375em; /* ~15px */
+    font-size: 0.875em; /* 14px - matching button */
     font-family: inherit;
     background: var(--white);
     color: hsl(0, 0%, 20%);
     transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+input:not([type="checkbox"]):not([type="radio"]), 
+select {
+    height: 2.375em; /* 38px at 16px base - matching button height */
+    padding: 0 1em; /* 16px horizontal */
+}
+
+textarea {
+    padding: 0.75em 1em;
+    line-height: 1.5em;
+    min-height: calc(1.5em * 2.5 + 1.5em); /* 2.5 lines of text + padding */
 }
 
 input:focus, textarea:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 0.1875em hsla(211, 100%, 50%, 0.1);
+}
+
+/* Borderless Config Inputs */
+.config-input {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 100%;
+    outline: none !important;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.config-input:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Checkbox & Radio Custom Styling */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    cursor: pointer;
+    user-select: none;
+}
+
+.form-check input[type="checkbox"],
+.form-check input[type="radio"] {
+    width: 1.25em;
+    height: 1.25em;
+    cursor: pointer;
+    accent-color: var(--primary);
+    margin: 0;
+    padding: 0;
+}
+
+/* File Input Custom Wrapper */
+.file-upload-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.file-upload-wrapper input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-upload-design {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em;
+    border: 0.125em dashed var(--border);
+    border-radius: 0.75em;
+    background: hsl(0, 0%, 98%);
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.file-upload-wrapper:hover .file-upload-design {
+    border-color: var(--primary);
+    background: hsla(211, 100%, 50%, 0.05);
+}
+
+.config-input.title {
+    font-weight: 700;
+    font-size: 1.125em;
+    color: hsl(0, 0%, 20%);
+}
+
+.config-input.description {
+    font-size: 0.875em;
+    color: hsl(0, 0%, 50%);
 }

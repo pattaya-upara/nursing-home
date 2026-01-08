@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Sink - Bourbon Mall Design System</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.cdnfonts.com/css/google-sans" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components/app-nav.css">
+
+    <style>
+        .sink-section { margin-bottom: 4em; padding: 2em; background: white; border-radius: 12px; border: 1px solid var(--border); }
+        .sink-title { font-size: 1.5em; font-weight: 700; margin-bottom: 1.5em; border-bottom: 2px solid var(--surface); padding-bottom: 0.5em; }
+        .component-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2em; }
+        .label { font-size: 0.75em; text-transform: uppercase; color: #888; margin-bottom: 0.5em; display: block; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <app-nav id="sidebar" orientation="vertical" class="app-sidebar-layout">
+        <a slot="menu" class="nav-link active" href="#"><i class="fas fa-vial"></i> Kitchen Sink</a>
+        <a slot="menu" class="nav-link" href="index.html"><i class="fas fa-arrow-left"></i> Back to App</a>
+    </app-nav>
+
+    <main class="main-content-layout">
+        <app-view-header>
+            <h2 slot="title">Kitchen Sink</h2>
+            <div slot="actions">
+                <button class="primary" onclick="document.getElementById('side-sheet').setAttribute('open', '')">Open Sidesheet</button>
+            </div>
+        </app-view-header>
+
+        <section class="sink-section">
+            <h3 class="sink-title">Buttons & Foundation</h3>
+            <div class="component-grid">
+                <div>
+                    <span class="label">Semantic Roles</span>
+                    <div class="d-flex flex-wrap">
+                        <button class="primary">Primary</button>
+                        <button class="secondary">Secondary</button>
+                        <button class="tertiary">Tertiary</button>
+                        <button class="danger">Danger</button>
+                    </div>
+                </div>
+                <div>
+                    <span class="label">Outlines</span>
+                    <div class="d-flex flex-wrap">
+                        <button class="primary outline">Primary</button>
+                        <button class="danger outline">Danger</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sink-section">
+            <h3 class="sink-title">Form Controls & Inputs</h3>
+            <div class="grid-layout cols-3">
+                <!-- Standard Inputs -->
+                <div class="d-flex flex-column gap-4">
+                    <div>
+                        <span class="label">Text Input</span>
+                        <input type="text" placeholder="Standard text field">
+                    </div>
+                    <div>
+                        <span class="label">Select Menu</span>
+                        <select>
+                            <option>Option One</option>
+                            <option>Option Two</option>
+                            <option>Option Three</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span class="label">Date Picker</span>
+                        <input type="date">
+                    </div>
+                </div>
+
+                <!-- Specialized Inputs -->
+                <div class="d-flex flex-column gap-4">
+                    <div>
+                        <span class="label">Text Area</span>
+                        <textarea rows="3" placeholder="Enter multi-line text..."></textarea>
+                    </div>
+                    <div>
+                        <span class="label">Selection Controls</span>
+                        <div class="d-flex flex-column gap-2 mt-2">
+                            <label class="form-check">
+                                <input type="checkbox" checked>
+                                <span class="small">Checkbox Option</span>
+                            </label>
+                            <label class="form-check">
+                                <input type="radio" name="sink-radio" checked>
+                                <span class="small">Radio Option A</span>
+                            </label>
+                            <label class="form-check">
+                                <input type="radio" name="sink-radio">
+                                <span class="small">Radio Option B</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complex Controls -->
+                <div class="d-flex flex-column gap-4">
+                    <div>
+                        <span class="label">File Upload</span>
+                        <div class="file-upload-wrapper">
+                            <input type="file">
+                            <div class="file-upload-design">
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2 text-muted"></i>
+                                <span class="small fw-bold">Click to upload</span>
+                                <span class="extra-small text-muted">or drag and drop files</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sink-section">
+            <h3 class="sink-title">Configuration Patterns (High Density)</h3>
+            <div style="max-width: 600px; background: hsl(0, 0%, 98%); padding: 2em; border-radius: 12px; border: 1px solid var(--border);">
+                <span class="label">Borderless Inline Editing</span>
+                <div class="d-flex flex-column gap-1 bg-white rounded shadow-sm overflow-hidden border">
+                    <div class="p-4 border-bottom d-flex flex-column gap-1">
+                        <input type="text" class="config-input title" value="Premium Room Service">
+                        <input type="text" class="config-input description" value="Daily maintenance including luxury linen change and minibar restock.">
+                    </div>
+                    <div class="p-4 border-bottom d-flex flex-column gap-1">
+                        <input type="text" class="config-input title" value="Security Patrol">
+                        <input type="text" class="config-input description" value="Hourly perimeter check and CCTV monitoring.">
+                    </div>
+                    <div class="p-4 d-flex flex-column gap-1">
+                        <input type="text" class="config-input title" value="Guest Concierge">
+                        <input type="text" class="config-input description" value="24/7 personalized assistance for bookings and information.">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sink-section">
+            <h3 class="sink-title">Data Cards</h3>
+            <div class="grid-layout cols-3">
+                <entity-card type="staff" data='{"id":"st-1","name":"Manager Alice","role":"Admin","dept":"Operations"}'></entity-card>
+                <entity-card type="package" data='{"id":"pkg-1","name":"Grand Opening","price":25000,"duration":30}'></entity-card>
+                <entity-card type="team" data='{"id":"tm-1","name":"Alpha Team","dept":"Maintenance"}'></entity-card>
+            </div>
+        </section>
+    </main>
+
+    <app-sidesheet id="side-sheet" title="Component Preview">
+        <div slot="left">
+            <h6>Left Pane (Details)</h6>
+            <p class="text-muted small">Information displayed here is typically read-only or summarizes the first-level content.</p>
+        </div>
+        <div slot="right">
+            <h6>Right Pane (Config)</h6>
+            <div class="p-3 border rounded bg-white mb-3">
+                <input type="text" class="config-input title" value="Configurable Item">
+                <input type="text" class="config-input description" value="Edit this specific configuration here.">
+            </div>
+        </div>
+        <sidesheet-footer slot="footer">
+            <button class="primary" slot="save-btn" onclick="document.getElementById('side-sheet').removeAttribute('open')">Close Preview</button>
+        </sidesheet-footer>
+    </app-sidesheet>
+
+    <script src="js/components/app-view-header.js"></script>
+    <script src="js/components/entity-card.js"></script>
+    <script src="js/components/app-nav.js"></script>
+    <script src="js/components/sidesheet-footer.js"></script>
+    <script src="js/components/app-sidesheet.js"></script>
+</body>
+</html>

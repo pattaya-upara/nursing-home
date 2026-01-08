@@ -23,48 +23,40 @@ const TeamView = (() => {
                 </div>
             `;
         },
-        renderDetail: (team) => {
+        renderDetail: (team, mode = 'display') => {
             const assignments = team.assignmentTypes || [];
+            const isEditMode = mode === 'edit';
 
-            return `
-                <div slot="left">
-                    <!-- TOP: Team Information -->
-                    <section class="mb-4">
-                        <label class="text-muted small d-block mb-1">Team Name</label>
-                        <div class="h5 mb-0">${team.name}</div>
-                    </section>
-
-                    <section class="mb-4">
-                        <label class="text-muted small d-block mb-1">Department</label>
-                        <span class="badge tertiary">${team.dept}</span>
-                    </section>
-
-                    <!-- BOTTOM: Team Members -->
-                    <footer class="mt-5 pt-4 border-top">
-                        <h6 class="mb-3">Team Members</h6>
-                        <div class="list-group list-group-flush">
-                            ${team.members && team.members.length > 0 ? team.members.map(memberId => `
-                                <div class="list-group-item px-0 py-2">
-                                    <div class="text-muted small">${memberId}</div>
-                                </div>
-                            `).join('') : '<div class="text-muted small">No members assigned</div>'}
-                        </div>
-                    </footer>
-                </div>
-
-                <div slot="right">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="mb-0">Services</h6>
-                        <button type="button" class="primary outline" onclick="App.addAssignmentRow()">+ Add</button>
+            // Left Pane: Team Information
+            const leftPane = `
+                ${SidesheetHelper.buildLeftSection('Team Name', `<div class="h5 mb-0">${SidesheetHelper.escapeHtml(team.name)}</div>`)}
+                ${SidesheetHelper.buildLeftSection('Department', `<span class="badge tertiary">${SidesheetHelper.escapeHtml(team.dept)}</span>`)}
+                
+                <footer class="mt-5 pt-4 border-top">
+                    <h6 class="mb-3">Team Members</h6>
+                    <div class="list-group list-group-flush">
+                        ${team.members && team.members.length > 0 ? team.members.map(memberId => `
+                            <div class="list-group-item px-0 py-2">
+                                <div class="text-muted small">${SidesheetHelper.escapeHtml(memberId)}</div>
+                            </div>
+                        `).join('') : '<div class="text-muted small">No members assigned</div>'}
                     </div>
+                </footer>
+            `;
 
-                    <input type="hidden" name="id" value="${team.id}" form="sidesheet-form">
-                    <div id="team-assignments-container" style="flex: 1; overflow-y: auto;">
-                        ${assignments.map((at, index) => `
-                            <div class="py-3 assignment-type-row border-bottom d-flex justify-content-between align-items-start gap-4">
+            // Right Pane: Services Form
+            const rightPaneContent = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Services</h6>
+                    ${isEditMode ? '<button type="button" class="primary outline" onclick="App.addAssignmentRow()">+ Add</button>' : ''}
+                </div>
+                <div id="team-assignments-container" style="flex: 1; overflow-y: auto;">
+                    ${assignments.length > 0 ? assignments.map((at, index) => `
+                        <div class="py-4 assignment-type-row border-bottom d-flex justify-content-between align-items-start gap-4">
+                            ${isEditMode ? `
                                 <div class="flex-1 d-flex flex-column gap-1">
-                                    <input type="text" class="form-control border-0 fw-bold at-name p-0 bg-transparent" value="${at.name}" placeholder="Service Name" form="sidesheet-form">
-                                    <input type="text" class="form-control border-0 text-muted extra-small at-desc p-0 bg-transparent" value="${at.description}" placeholder="Brief description..." form="sidesheet-form">
+                                    <input type="text" class="config-input title at-name" value="${SidesheetHelper.escapeHtml(at.name)}" placeholder="Service Name" form="sidesheet-form">
+                                    <input type="text" class="config-input description at-desc" value="${SidesheetHelper.escapeHtml(at.description)}" placeholder="Brief description..." form="sidesheet-form">
                                 </div>
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="d-flex align-items-center d-none">
@@ -75,16 +67,28 @@ const TeamView = (() => {
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
-                                <input type="hidden" class="at-id" value="${at.id}" form="sidesheet-form">
-                            </div>
-                        `).join('') || '<div class="py-4 text-muted small text-center">No services registered</div>'}
-                    </div>
+                            ` : `
+                                <div class="flex-1 d-flex flex-column gap-1">
+                                    <div class="fw-bold">${SidesheetHelper.escapeHtml(at.name)}</div>
+                                    <div class="text-muted small">${SidesheetHelper.escapeHtml(at.description || '')}</div>
+                                </div>
+                            `}
+                            <input type="hidden" class="at-id" value="${SidesheetHelper.escapeHtml(at.id)}" form="sidesheet-form">
+                        </div>
+                    `).join('') : '<div class="py-4 text-muted small text-center">No services registered</div>'}
                 </div>
-                
-                <sidesheet-footer slot="footer">
-                    <button class="primary" slot="save-btn" type="submit" form="sidesheet-form">Save Changes</button>
-                </sidesheet-footer>
             `;
+
+            const rightPane = SidesheetHelper.buildForm('sidesheet-form', team.id, rightPaneContent);
+
+            return SidesheetHelper.buildSidesheet({
+                leftPane,
+                rightPane,
+                footerId: `team-footer-${team.id}`,
+                entityId: team.id,
+                isEditMode,
+                editHandler: 'App.toggleTeamEditMode'
+            });
         }
     };
 })();

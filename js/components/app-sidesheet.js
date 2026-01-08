@@ -13,18 +13,30 @@ class AppSidesheet extends HTMLElement {
 
     connectedCallback() {
         this.render();
+        this.updateState();
     }
 
-    attributeChangedCallback() {
-        this.render();
+    attributeChangedCallback(name) {
+        if (this.shadowRoot.innerHTML === '') return;
+        
+        if (name === 'open') {
+            this.updateState();
+        } else if (name === 'title') {
+            const titleEl = this.shadowRoot.querySelector('.title');
+            if (titleEl) titleEl.textContent = this.getAttribute('title');
+        }
     }
 
-    get isOpen() {
-        return this.hasAttribute('open');
-    }
-
-    get title() {
-        return this.getAttribute('title') || '';
+    updateState() {
+        const isOpen = this.hasAttribute('open');
+        const overlay = this.shadowRoot.getElementById('overlay');
+        const sheet = this.shadowRoot.querySelector('.sheet');
+        
+        if (isOpen) {
+            overlay.classList.add('active');
+        } else {
+            overlay.classList.remove('active');
+        }
     }
 
     close() {
@@ -33,24 +45,27 @@ class AppSidesheet extends HTMLElement {
     }
 
     render() {
+        const title = this.getAttribute('title') || '';
         this.shadowRoot.innerHTML = `
-            <link rel="stylesheet" href="css/foundation/elements.css">
-            <link rel="stylesheet" href="css/components/app-sidesheet.css">
-            <div class="overlay ${this.isOpen ? 'active' : ''}" id="overlay"></div>
+            <style>
+                @import "css/foundation/elements.css";
+                @import "css/components/app-sidesheet.css";
+            </style>
+            <div class="overlay" id="overlay"></div>
             <div class="sheet">
                 <header>
-                    <h2 class="title">${this.title}</h2>
+                    <h2 class="title">${title}</h2>
                     <button class="close-btn" id="close-btn">&times;</button>
                 </header>
                 <main>
-                    <section class="left-pane">
+                    <div class="left-pane">
                         <slot name="left"></slot>
-                    </section>
-                    <section class="right-pane">
-                        <form id="sidesheet-form">
-                            <slot name="right"></slot>
-                        </form>
-                    </section>
+                    </div>
+                    <div class="right-pane">
+                        <slot name="right"></slot>
+                        <!-- Default slot falls back to right pane if no named slots -->
+                        <slot></slot>
+                    </div>
                 </main>
                 <footer>
                     <slot name="footer"></slot>
