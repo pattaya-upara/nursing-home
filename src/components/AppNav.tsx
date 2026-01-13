@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { Stack, Text, Avatar, Group } from '@mantine/core';
-import { IconChartLine, IconBox, IconUsers, IconUser } from '@tabler/icons-react';
+import { IconChartLine, IconBox, IconUsers, IconUser, IconSettings } from '@tabler/icons-react';
 import './AppNav.css';
 
 export function AppNav() {
@@ -13,6 +13,10 @@ export function AppNav() {
             
             <nav className="app-nav-content">
                 <Stack gap="xs">
+                    <NavLink to="/business-setup" className="nav-link">
+                        <IconSettings size={20} />
+                        <span>Business Setup</span>
+                    </NavLink>
                     <NavLink to="/dashboard" className="nav-link">
                         <IconChartLine size={20} />
                         <span>Dashboard</span>

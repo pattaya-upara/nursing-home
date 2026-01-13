@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppShell } from '@mantine/core';
 import { AppNav } from './components/AppNav';
+import { BusinessSetup } from './pages/BusinessSetup';
 import { Dashboard } from './pages/Dashboard';
 import { Packages } from './pages/Packages';
 import { Teams } from './pages/Teams';
@@ -21,7 +22,8 @@ function App() {
                     </AppShell.Navbar>
                     <AppShell.Main>
                         <Routes>
-                            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                            <Route path="/" element={<Navigate to="/business-setup" replace />} />
+                            <Route path="/business-setup" element={<BusinessSetup />} />
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/packages" element={<Packages />} />
                             <Route path="/teams" element={<Teams />} />
