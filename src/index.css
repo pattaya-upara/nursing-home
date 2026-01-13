@@ -1,0 +1,54 @@
+:root {
+  font-family: 'Google Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  color: #213547;
+  background-color: #ffffff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Semantic HSL Foundation from bourbon project */
+  --surface: hsl(43, 19%, 93%);
+  --white: hsl(0, 0%, 100%);
+  --border: hsl(0, 0%, 93%);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--surface);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Custom Mantine Component Overrides */
+
+h2 {
+  padding-block: var(--mantine-spacing-md);
+}
+
+/* Main content area background */
+.mantine-AppShell-main {
+  background-color: var(--surface);
+}
+
+/* Table styling - matching original bourbon project */
+.mantine-Table-root {
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.mantine-Table-th {
+  background-color: hsl(0, 0%, 98%);
+}
+
+.mantine-Table-td {
+  background-color: var(--white);
+}
