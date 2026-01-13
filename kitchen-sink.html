@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.cdnfonts.com/css/google-sans" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/foundation/elements.css">
     <link rel="stylesheet" href="css/components/app-nav.css">
 
     <style>
@@ -60,31 +61,35 @@
                 <!-- Standard Inputs -->
                 <div class="d-flex flex-column gap-4">
                     <div>
-                        <span class="label">Text Input</span>
-                        <input type="text" placeholder="Standard text field">
+                        <label class="form-label">Text Input</label>
+                        <input type="text" class="form-control" placeholder="Standard text field">
                     </div>
                     <div>
-                        <span class="label">Select Menu</span>
-                        <select>
+                        <label class="form-label">Select Menu</label>
+                        <select class="form-select">
                             <option>Option One</option>
                             <option>Option Two</option>
                             <option>Option Three</option>
                         </select>
                     </div>
                     <div>
-                        <span class="label">Date Picker</span>
-                        <input type="date">
+                        <label class="form-label">Date Picker</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div>
+                        <label class="form-label">Number Input</label>
+                        <input type="number" class="form-control" placeholder="Enter number" value="0">
                     </div>
                 </div>
 
                 <!-- Specialized Inputs -->
                 <div class="d-flex flex-column gap-4">
                     <div>
-                        <span class="label">Text Area</span>
-                        <textarea rows="3" placeholder="Enter multi-line text..."></textarea>
+                        <label class="form-label">Text Area</label>
+                        <textarea class="form-control" rows="3" placeholder="Enter multi-line text..."></textarea>
                     </div>
                     <div>
-                        <span class="label">Selection Controls</span>
+                        <label class="form-label">Selection Controls</label>
                         <div class="d-flex flex-column gap-2 mt-2">
                             <label class="form-check">
                                 <input type="checkbox" checked>
@@ -100,12 +105,30 @@
                             </label>
                         </div>
                     </div>
+                    <div>
+                        <label class="form-label">Disabled Input</label>
+                        <input type="text" class="form-control" value="Disabled field" disabled>
+                    </div>
                 </div>
 
                 <!-- Complex Controls -->
                 <div class="d-flex flex-column gap-4">
                     <div>
-                        <span class="label">File Upload</span>
+                        <label class="form-label">Input Group</label>
+                        <div class="input-group">
+                            <span class="input-group-text">฿</span>
+                            <input type="number" class="form-control" placeholder="0" value="120000">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Input Group (Suffix)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" placeholder="20" value="30">
+                            <span class="input-group-text">Days</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">File Upload</label>
                         <div class="file-upload-wrapper">
                             <input type="file">
                             <div class="file-upload-design">
@@ -115,6 +138,60 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sink-section">
+            <h3 class="sink-title">Form Validation States</h3>
+            <div class="grid-layout cols-2">
+                <div class="d-flex flex-column gap-4">
+                    <div>
+                        <label class="form-label">Valid Input</label>
+                        <input type="text" class="form-control is-valid" value="Valid value">
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                    <div>
+                        <label class="form-label">Invalid Input</label>
+                        <input type="email" class="form-control is-invalid" value="invalid-email">
+                        <div class="invalid-feedback">Please provide a valid email address.</div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gap-4">
+                    <div>
+                        <label class="form-label">Valid Select</label>
+                        <select class="form-select is-valid">
+                            <option selected>Selected Option</option>
+                            <option>Option Two</option>
+                        </select>
+                        <div class="valid-feedback">Selection is valid.</div>
+                    </div>
+                    <div>
+                        <label class="form-label">Invalid Select</label>
+                        <select class="form-select is-invalid">
+                            <option>Please select...</option>
+                            <option>Option One</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a valid option.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="sink-section">
+            <h3 class="sink-title">Form Sizes</h3>
+            <div class="d-flex flex-column gap-4" style="max-width: 400px;">
+                <div>
+                    <label class="form-label">Small</label>
+                    <input type="text" class="form-control form-control-sm" placeholder="Small input">
+                </div>
+                <div>
+                    <label class="form-label">Default</label>
+                    <input type="text" class="form-control" placeholder="Default input">
+                </div>
+                <div>
+                    <label class="form-label">Large</label>
+                    <input type="text" class="form-control form-control-lg" placeholder="Large input">
                 </div>
             </div>
         </section>

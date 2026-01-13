@@ -159,10 +159,193 @@ textarea {
     min-height: calc(1.5em * 2.5 + 1.5em); /* 2.5 lines of text + padding */
 }
 
-input:focus, textarea:focus {
+input:focus, 
+textarea:focus, 
+select:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 0.1875em hsla(211, 100%, 50%, 0.1);
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+    background: hsl(0, 0%, 96%);
+    color: hsl(0, 0%, 60%);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: hsl(0, 0%, 60%);
+    opacity: 1;
+}
+
+/* Form Control Classes */
+.form-control {
+    display: block;
+    width: 100%;
+    border: 0.0625em solid var(--border);
+    border-radius: 0.5em;
+    font-size: 0.875em;
+    font-family: inherit;
+    background: var(--white);
+    color: hsl(0, 0%, 20%);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.1875em hsla(211, 100%, 50%, 0.1);
+}
+
+.form-control:disabled {
+    background: hsl(0, 0%, 96%);
+    color: hsl(0, 0%, 60%);
+    cursor: not-allowed;
+}
+
+.form-control-sm {
+    height: 2em;
+    padding: 0 0.75em;
+    font-size: 0.8125em;
+}
+
+.form-control-lg {
+    height: 3em;
+    padding: 0 1.25em;
+    font-size: 1em;
+}
+
+/* Form Select */
+.form-select {
+    display: block;
+    width: 100%;
+    height: 2.375em;
+    padding: 0 2.5em 0 1em;
+    border: 0.0625em solid var(--border);
+    border-radius: 0.5em;
+    font-size: 0.875em;
+    font-family: inherit;
+    background: var(--white) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") no-repeat right 0.75em center/1em 1em;
+    color: hsl(0, 0%, 20%);
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.1875em hsla(211, 100%, 50%, 0.1);
+}
+
+.form-select:disabled {
+    background: hsl(0, 0%, 96%);
+    color: hsl(0, 0%, 60%);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Form Label */
+.form-label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: 500;
+    color: hsl(0, 0%, 20%);
+    font-size: 0.875em;
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: var(--danger);
+}
+
+/* Input Group */
+.input-group {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group > .form-control,
+.input-group > .form-select {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+}
+
+.input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0 1em;
+    font-size: 0.875em;
+    font-weight: 500;
+    color: hsl(0, 0%, 40%);
+    text-align: center;
+    white-space: nowrap;
+    background: hsl(0, 0%, 96%);
+    border: 0.0625em solid var(--border);
+    border-radius: 0.5em;
+}
+
+.input-group > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    margin-left: -0.0625em;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.input-group > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group:focus-within .input-group-text {
+    border-color: var(--primary);
+}
+
+/* Form Validation States */
+.form-control.is-valid,
+.form-select.is-valid {
+    border-color: var(--success);
+}
+
+.form-control.is-valid:focus,
+.form-select.is-valid:focus {
+    border-color: var(--success);
+    box-shadow: 0 0 0 0.1875em hsla(142, 70%, 45%, 0.1);
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: var(--danger);
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 0.1875em hsla(354, 70%, 54%, 0.1);
+}
+
+.valid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25em;
+    font-size: 0.8125em;
+    color: var(--success);
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25em;
+    font-size: 0.8125em;
+    color: var(--danger);
 }
 
 /* Borderless Config Inputs */
@@ -245,4 +428,82 @@ input:focus, textarea:focus {
 .config-input.description {
     font-size: 0.875em;
     color: hsl(0, 0%, 50%);
+}
+
+/* Borderless Form Controls */
+.form-control.border-0,
+input.border-0,
+textarea.border-0 {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.form-control.border-0:focus,
+input.border-0:focus,
+textarea.border-0:focus {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Transparent Background */
+.bg-transparent {
+    background: transparent !important;
+}
+
+/* Form Group Spacing */
+.form-group {
+    margin-bottom: 1.5em;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Form Row (for horizontal layouts) */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.form-row > * {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Help Text */
+.form-text {
+    display: block;
+    margin-top: 0.25em;
+    font-size: 0.8125em;
+    color: hsl(0, 0%, 50%);
+}
+
+/* Number Input Spinner Styling */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+    cursor: pointer;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Textarea Resize Control */
+textarea.resize-none {
+    resize: none;
+}
+
+textarea.resize-vertical {
+    resize: vertical;
+}
+
+textarea.resize-horizontal {
+    resize: horizontal;
+}
+
+textarea.resize-both {
+    resize: both;
 }
